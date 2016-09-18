@@ -9,7 +9,7 @@ function Write-Theme
         $with
     )
 
-    $fancySpacerSymbol = [char]::ConvertFromUtf32(0xE0B0)
+    $fancySpacerSymbol = $sl.FancySpacerSymbol 
     $drive = (Get-Drive -path (Get-Location).Path)
     $location = (Get-ShortPath -path (Get-Location).Path)
     # remove the trailing slash for the HOME folder
@@ -51,7 +51,7 @@ function Write-Theme
         $themeInfo = Get-VcsInfo -status ($status)
         $lastColor = $themeInfo.BackgroundColor
         Write-Prompt -Object $fancySpacerSymbol -ForegroundColor $sl.PromptBackgroundColor -BackgroundColor $lastColor
-        Write-Prompt -Object " $($themeInfo.VcInfo) " -BackgroundColor $lastColor -ForegroundColor $sl.GitForegroundColor        
+        Write-Prompt -Object " $($themeInfo.VcInfo) " -BackgroundColor $lastColor -ForegroundColor $sl.GitForegroundColor
     }
 
     if ($with)

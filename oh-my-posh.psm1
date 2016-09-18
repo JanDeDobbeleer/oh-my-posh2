@@ -6,6 +6,8 @@
 $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
     CurrentThemeLocation             = "$PSScriptRoot\Themes\Agnoster.psm1"
     MyThemesLocation                 = '~\Documents\WindowsPowerShell\PoshThemes'
+    FancySpacerSymbol                = [char]::ConvertFromUtf32(0xE0B0)
+    BetweenFancySpacerSymbol         = [char]::ConvertFromUtf32(0xE0B1)
     GitBranchSymbol                  = [char]::ConvertFromUtf32(0xE0A0)
     FailedCommandSymbol              = [char]::ConvertFromUtf32(0x2A2F)
     TruncatedFolderSymbol            = '..'
@@ -102,10 +104,10 @@ function global:Write-WithPrompt()
 
     if(Test-IsVanillaWindow)
     {
-        Write-ClassicPrompt -command $command 
+        Write-ClassicPrompt -command $command
         return
     }
-    
+
     Write-Theme -lastCommandFailed $lastCommandFailed -with $command
     Write-Host ' ' -NoNewline
 }
@@ -193,13 +195,13 @@ function New-CompletionResult
     New-Object System.Management.Automation.CompletionResult $CompletionText, $ListItemText, $CompletionResultType, $ToolTip
 }
 
-function ThemeCompletion 
+function ThemeCompletion
 {
     param(
-        $commandName, 
-        $parameterName, 
-        $wordToComplete, 
-        $commandAst, 
+        $commandName,
+        $parameterName,
+        $wordToComplete,
+        $commandAst,
         $fakeBoundParameter
     )
     $themes = @()

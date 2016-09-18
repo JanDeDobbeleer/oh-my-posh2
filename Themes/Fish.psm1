@@ -14,19 +14,19 @@ function Write-Theme
     $backwardSpacerSymbol = [char]::ConvertFromUtf32(0xE0B2)
     $betweenBackwardSpacerSymbol = [char]::ConvertFromUtf32(0xE0B3)
     $date = Get-Date -UFormat %d-%m-%Y
-    $timeStamp = Get-Date -UFormat %R 
+    $timeStamp = Get-Date -UFormat %R
 
     $leftText = "$backwardSpacerSymbol $date $betweenBackwardSpacerSymbol $timeStamp "
     Set-CursorUp -lines 1
     Set-CursorForRightBlockWrite -textLength $leftText.Length
 
-    Write-Prompt -Object "$backwardSpacerSymbol" -ForegroundColor $sl.PromptBackgroundColor -BackgroundColor $sl.PromptHighlightColor    
-    Write-Prompt " $date $betweenBackwardSpacerSymbol $timeStamp " -ForegroundColor $sl.PromptForegroundColor -BackgroundColor $sl.PromptBackgroundColor 
-    
+    Write-Prompt -Object "$backwardSpacerSymbol" -ForegroundColor $sl.PromptBackgroundColor -BackgroundColor $sl.PromptHighlightColor
+    Write-Prompt " $date $betweenBackwardSpacerSymbol $timeStamp " -ForegroundColor $sl.PromptForegroundColor -BackgroundColor $sl.PromptBackgroundColor
+
     Pop-CursorPosition
 
-    $fancySpacerSymbol = [char]::ConvertFromUtf32(0xE0B0)
-    $betweenFancySpacerSymbol = [char]::ConvertFromUtf32(0xE0B1)
+    $fancySpacerSymbol = $sl.FancySpacerSymbol
+    $betweenBackwardSpacerSymbol = $sl.BetweenFancySpacerSymbol
 
     # Write the prompt
     Write-Prompt -Object ' ' -ForegroundColor $sl.PromptForegroundColor -BackgroundColor $sl.SessionInfoBackgroundColor
@@ -46,19 +46,19 @@ function Write-Theme
     $user = [Environment]::UserName
     $computer = $env:computername
     $path = (Get-Location).Path.Replace($HOME,'~')
-    
+
     Write-Prompt -Object "$user@$computer " -ForegroundColor $sl.SessionInfoForegroundColor -BackgroundColor $sl.SessionInfoBackgroundColor
     Write-Prompt -Object "$fancySpacerSymbol " -ForegroundColor $sl.SessionInfoBackgroundColor -BackgroundColor $sl.PromptBackgroundColor
 
     # Writes the drive portion
     Write-Prompt -Object "$path " -ForegroundColor $sl.PromptForegroundColor -BackgroundColor $sl.PromptBackgroundColor
-    
+
     $status = Get-VCSStatus
     if ($status)
     {
         $themeInfo = Get-VcsInfo -status ($status)
         Write-Prompt -Object $betweenFancySpacerSymbol -ForegroundColor $sl.PromptForegroundColor -BackgroundColor $sl.PromptBackgroundColor
-        Write-Prompt -Object " $($themeInfo.VcInfo) " -ForegroundColor $sl.PromptForegroundColor -BackgroundColor $sl.PromptBackgroundColor       
+        Write-Prompt -Object " $($themeInfo.VcInfo) " -ForegroundColor $sl.PromptForegroundColor -BackgroundColor $sl.PromptBackgroundColor
     }
 
     if ($with)
