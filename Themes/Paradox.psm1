@@ -8,9 +8,8 @@ function Write-Theme
         [string]
         $with
     )
-    
-    $fancySpacerSymbol = [char]::ConvertFromUtf32(0xE0B0)
-      
+
+    $fancySpacerSymbol = $sl.FancySpacerSymbol 
     $lastColor = $sl.PromptBackgroundColor
     # PowerLine starts with a space
     Write-Prompt -Object ' ' -ForegroundColor $sl.PromptForegroundColor -BackgroundColor $sl.SessionInfoBackgroundColor
@@ -30,7 +29,7 @@ function Write-Theme
     $user = [Environment]::UserName
     $computer = $env:computername
     $path = (Get-Location).Path.Replace($HOME,'~')
-    
+
     Write-Prompt -Object "$user@$computer " -ForegroundColor $sl.SessionInfoForegroundColor -BackgroundColor $sl.SessionInfoBackgroundColor
     Write-Prompt -Object "$fancySpacerSymbol " -ForegroundColor $sl.SessionInfoBackgroundColor -BackgroundColor $sl.PromptBackgroundColor
 
@@ -43,7 +42,7 @@ function Write-Theme
         $themeInfo = Get-VcsInfo -status ($status)
         $lastColor = $themeInfo.BackgroundColor
         Write-Prompt -Object $fancySpacerSymbol -ForegroundColor $sl.PromptBackgroundColor -BackgroundColor $lastColor
-        Write-Prompt -Object " $($themeInfo.VcInfo) " -BackgroundColor $lastColor -ForegroundColor $sl.GitForegroundColor        
+        Write-Prompt -Object " $($themeInfo.VcInfo) " -BackgroundColor $lastColor -ForegroundColor $sl.GitForegroundColor
     }
 
     # Writes the postfix to the prompt
