@@ -338,7 +338,7 @@ function Get-ShortPath
         $shortPath =  $result -join $sl.PromptSymbols.PathSeparator
         if ($shortPath)
         {
-            $drive = (Get-Drive -path $dir.path)
+            $drive = (Get-Drive -path $currentDir.FullName)
             return "$drive$($sl.PromptSymbols.PathSeparator)$shortPath"
         } 
         else 
