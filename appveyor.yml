@@ -1,68 +1,75 @@
-branches:
-    only:
-      - master
-skip_tags: true
-version: 2.0.{build}
-image: WMF 5
-install:
-- ps: Get-PackageProvider -Name Nuget -Force
-environment:
-    GH_KEY:
-      secure: 7CipYchiaJLIPf5MRNnJ2+Nk7dm+FxWkEHlASCcskJbMz+jbdz/qiseUeKCkQKHC
-    NG_KEY:
-      secure: tN2AWqN8DMHjaUvl6AbwwMK1GrF6K0xPiCSGRh1SWZGex4kgVAx+Rri1AxxPYmBg
-build_script:
-- ps: (Get-Content '.\oh-my-posh.psd1' -Raw).Replace('%version%', $ENV:APPVEYOR_BUILD_VERSION) | Out-File -Encoding 'UTF8' '.\oh-my-posh.psd1'
-deploy_script:
-  - ps: >-
-      Publish-Module -path . -NuGetApiKey $env:NG_KEY -Verbose
-
-      #Create GitHub release
-
-      Write-Host 'Starting GitHub release'
-
-      $releaseData = @{
-          tag_name         = $ENV:APPVEYOR_BUILD_VERSION
-          target_commitish = 'master'
-          name             = $ENV:APPVEYOR_BUILD_VERSION
-          draft            = $false
-          prerelease       = $false
-      }
-
-      $auth = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($env:GH_KEY + ':x-oauth-basic'))
-
-      $releaseParams = @{
-          Uri         = 'https://api.github.com/repos/janjoris/oh-my-posh/releases'
-          Method      = 'POST'
-          Headers     = @{
-              Authorization = $auth
-          }
-          ContentType = 'application/json'
-          Body        = (ConvertTo-Json -InputObject $releaseData -Compress)
-      }
-
-      $result = Invoke-RestMethod @releaseParams
-
-      $uploadUri = $result | Select-Object -ExpandProperty upload_url
-
-      $uploadUri = $uploadUri -creplace '\{\?name,label\}'  #, '?name=oh-my-posh.zip'
-
-      $uploadUri = $uploadUri + '?name=oh-my-posh.zip'
-
-      Add-Type -assembly "system.io.compression.filesystem"
-
-      [io.compression.zipfile]::CreateFromDirectory($env:APPVEYOR_BUILD_FOLDER, "$HOME\Desktop\oh-my-posh.zip")
-
-      $uploadParams = @{
-          Uri         = $uploadUri
-          Method      = 'POST'
-          Headers     = @{
-              Authorization = $auth
-          }
-          ContentType = 'application/zip'
-          InFile      = "$HOME\Desktop\oh-my-posh.zip"
-      }
-
-      $result = Invoke-RestMethod @uploadParams
-
-      Write-Host 'GitHub release completed'
+-  
+  branches:
+      only:
+        - master
+  environment:
+      GH_KEY:
+        secure: 7CipYchiaJLIPf5MRNnJ2+Nk7dm+FxWkEHlASCcskJbMz+jbdz/qiseUeKCkQKHC
+      NG_KEY:
+        secure: tN2AWqN8DMHjaUvl6AbwwMK1GrF6K0xPiCSGRh1SWZGex4kgVAx+Rri1AxxPYmBg
+  deploy_script:
+    - ps: >-
+        Publish-Module -path . -NuGetApiKey $env:NG_KEY -Verbose
+  
+        #Create GitHub release
+  
+        Write-Host 'Starting GitHub release'
+  
+        $releaseData = @{
+            tag_name         = $ENV:APPVEYOR_BUILD_VERSION
+            target_commitish = 'master'
+            name             = $ENV:APPVEYOR_BUILD_VERSION
+            draft            = $false
+            prerelease       = $false
+        }
+  
+        $auth = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($env:GH_KEY + ':x-oauth-basic'))
+  
+        $releaseParams = @{
+            Uri         = 'https://api.github.com/repos/janjoris/oh-my-posh/releases'
+            Method      = 'POST'
+            Headers     = @{
+                Authorization = $auth
+            }
+            ContentType = 'application/json'
+            Body        = (ConvertTo-Json -InputObject $releaseData -Compress)
+        }
+  
+        $result = Invoke-RestMethod @releaseParams
+  
+        $uploadUri = $result | Select-Object -ExpandProperty upload_url
+  
+        $uploadUri = $uploadUri -creplace '\{\?name,label\}'  #, '?name=oh-my-posh.zip'
+  
+        $uploadUri = $uploadUri + '?name=oh-my-posh.zip'
+  
+        Add-Type -assembly "system.io.compression.filesystem"
+  
+        [io.compression.zipfile]::CreateFromDirectory($env:APPVEYOR_BUILD_FOLDER, "$HOME\Desktop\oh-my-posh.zip")
+  
+        $uploadParams = @{
+            Uri         = $uploadUri
+            Method      = 'POST'
+            Headers     = @{
+                Authorization = $auth
+            }
+            ContentType = 'application/zip'
+            InFile      = "$HOME\Desktop\oh-my-posh.zip"
+        }
+  
+        $result = Invoke-RestMethod @uploadParams
+  
+        Write-Host 'GitHub release completed'
+-
+  skip_tags: true
+  version: 2.0.{build}
+  image: WMF 5
+  install:
+    - ps: Get-PackageProvider -Name Nuget -Force
+    - ps: cinst pester
+  build_script:
+    - ps: (Get-Content '.\oh-my-posh.psd1' -Raw).Replace('%version%', $ENV:APPVEYOR_BUILD_VERSION) | Out-File -Encoding 'UTF8' '.\oh-my-posh.psd1'
+  test_script:
+    - ps: $res = Invoke-Pester -Path ".\Helpers" -OutputFormat NUnitXml -OutputFile TestsResults.xml -PassThru
+    - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\TestsResults.xml))
+    - ps: if ($res.FailedCount -gt 0) { throw "$($res.FailedCount) tests failed."}

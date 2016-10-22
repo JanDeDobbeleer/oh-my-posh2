@@ -1,6 +1,7 @@
 #requires -Version 2 -Modules posh-git
 
-. "$PSScriptRoot\Themes\Tools.ps1"
+. "$PSScriptRoot\Helpers\PoshGit.ps1"
+. "$PSScriptRoot\Helpers\Prompt.ps1"
 . "$PSScriptRoot\defaults.ps1"
 
 $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
