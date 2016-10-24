@@ -1,56 +1,8 @@
 #requires -Version 2 -Modules posh-git
 
+. "$PSScriptRoot\defaults.ps1"
 . "$PSScriptRoot\Helpers\PoshGit.ps1"
 . "$PSScriptRoot\Helpers\Prompt.ps1"
-. "$PSScriptRoot\defaults.ps1"
-
-$global:ThemeSettings = New-Object -TypeName PSObject -Property @{
-    CurrentThemeLocation             = "$PSScriptRoot\Themes\Agnoster.psm1"
-    MyThemesLocation                 = '~\Documents\WindowsPowerShell\PoshThemes'
-    ErrorCount                       = 0
-    GitSymbols                       = @{
-        BranchSymbol                  = [char]::ConvertFromUtf32(0xE0A0)
-        BeforeStashSymbol                = '{'
-        AfterStashSymbol                 = '}'
-        DelimSymbol                      = '|'
-        LocalWorkingStatusSymbol         = '!'
-        LocalStagedStatusSymbol          = '~'
-        LocalDefaultStatusSymbol         = ''
-        BranchUntrackedSymbol            = [char]::ConvertFromUtf32(0x2262)
-        BranchIdenticalStatusToSymbol    = [char]::ConvertFromUtf32(0x2263)
-        BranchAheadStatusSymbol          = [char]::ConvertFromUtf32(0x2191)
-        BranchBehindStatusSymbol         = [char]::ConvertFromUtf32(0x2193)
-    }
-    PromptSymbols                    = @{
-        StartSymbol                      = ' '        
-        TruncatedFolderSymbol            = '..'
-        PromptIndicator                  = [char]::ConvertFromUtf32(0x25B6)  
-        FailedCommandSymbol              = [char]::ConvertFromUtf32(0x2A2F)        
-        ElevatedSymbol                   = [char]::ConvertFromUtf32(0x26A1)
-        SegmentForwardSymbol             = [char]::ConvertFromUtf32(0xE0B0)
-        SegmentBackwardSymbol            = [char]::ConvertFromUtf32(0x26A1)
-        SegmentSeparatorForwardSymbol    = [char]::ConvertFromUtf32(0x26A1)
-        SegmentSeparatorBackwardSymbol   = [char]::ConvertFromUtf32(0x26A1)
-        PathSeparator                    = '\'
-    }
-    Colors                           = @{
-        GitDefaultColor                  = [ConsoleColor]::DarkGreen
-        GitLocalChangesColor             = [ConsoleColor]::DarkYellow
-        GitNoLocalChangesAndAheadColor   = [ConsoleColor]::DarkMagenta
-        PromptForegroundColor            = [ConsoleColor]::White
-        PromptHighlightColor             = [ConsoleColor]::DarkBlue
-        DriveForegroundColor             = [ConsoleColor]::DarkBlue
-        PromptBackgroundColor            = [ConsoleColor]::DarkBlue
-        PromptSymbolColor                = [ConsoleColor]::White
-        SessionInfoBackgroundColor       = [ConsoleColor]::Magenta
-        SessionInfoForegroundColor       = [ConsoleColor]::White
-        CommandFailedIconForegroundColor = [ConsoleColor]::DarkRed
-        AdminIconForegroundColor         = [ConsoleColor]::DarkYellow
-        WithBackgroundColor              = [ConsoleColor]::DarkRed
-        WithForegroundColor              = [ConsoleColor]::White
-        GitForegroundColor               = [ConsoleColor]::Black
-    }    
-}
 
 <#
         .SYNOPSIS

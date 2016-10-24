@@ -33,40 +33,40 @@ function Get-Drive
 {
     param
     (
-        [string]
-        $path
+        [object]
+        $dir
     )
 
-    $provider = Get-Provider -path $path
+    $provider = Get-Provider -path $dir.Path
 
     if($provider -eq 'FileSystem')
     {
         $homedir = Get-Home
-        if($path -eq $homedir)
+        if($dir.Path -eq $homedir)
         {
             return '~'
         }
-        elseif( $path.StartsWith( 'Microsoft.PowerShell.Core' ) )
+        elseif($dir.Path.StartsWith('Microsoft.PowerShell.Core'))
         {
-            $parts = $path.Replace('Microsoft.PowerShell.Core\FileSystem::\\','').Split('\')
+            $parts = $dir.Path.Replace('Microsoft.PowerShell.Core\FileSystem::\\','').Split('\')
             return "$($parts[0])$($sl.PromptSymbols.PathSeparator)$($parts[1])$($sl.PromptSymbols.PathSeparator)"
         }
         else
         {
-            $root = $path.Drive.Name
+            $root = $dir.Drive.Name
             if($root)
             {
                 return $root
             }
             else
             {
-                return $path.Split(':\')[0] + ':'
+                return $dir.Path.Split(':\')[0] + ':'
             }
         }
     }
     else
     {
-        return $path.Drive.Name
+        return $dir.Drive.Name
     }
 }
 

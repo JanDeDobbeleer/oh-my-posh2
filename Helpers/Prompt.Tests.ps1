@@ -1,3 +1,21 @@
+$global:ThemeSettings = New-Object -TypeName PSObject -Property @{
+    CurrentThemeLocation             = "$PSScriptRoot\Themes\Agnoster.psm1"
+    MyThemesLocation                 = '~\Documents\WindowsPowerShell\PoshThemes'
+    ErrorCount                       = 0
+    PromptSymbols                    = @{
+        StartSymbol                      = ' '        
+        TruncatedFolderSymbol            = '..'
+        PromptIndicator                  = '>' 
+        FailedCommandSymbol              = 'x'        
+        ElevatedSymbol                   = '!'
+        SegmentForwardSymbol             = '>'
+        SegmentBackwardSymbol            = '<'
+        SegmentSeparatorForwardSymbol    = '>'
+        SegmentSeparatorBackwardSymbol   = '<'
+        PathSeparator                    = '\'
+    }
+}
+
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path).Replace(".Tests.", ".")
 . "$here\$sut"
@@ -48,4 +66,38 @@ Describe "Get-Provider" {
            Mock Get-Item { return @{PSProvider = @{Name = 'AwesomeSauce'}} }
            Get-Provider $pwd | Should Be 'AwesomeSauce'
         }
+}
+
+Describe "Get-Drive" {
+    Context "Running in the FileSystem" {
+        BeforeAll { Mock Get-Provider { return 'FileSystem'} }
+        It "is in the $HOME folder" {
+           Mock Get-Home {return 'C:\Users\Jan'}
+           $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan'}
+           Get-Drive $path | Should Be '~'
+        }
+        It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' with provider X:" {
+           $path = @{Drive = @{Name = 'X:'}; Path = 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello'}
+           Get-Drive $path | Should Be "Test$($ThemeSettings.PromptSymbols.PathSeparator)Hello$($ThemeSettings.PromptSymbols.PathSeparator)"
+        }
+        It "is in C:" {
+           $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Documents'}
+           Get-Drive $path | Should Be 'C:'
+        }
+        It "is has no drive" {
+           $path = @{Path = 'J:\Test\Folder\Somewhere'}
+           Get-Drive $path | Should Be 'J:'
+        }
+        It "is has no valid path" {
+           $path = @{Path = 'J\Test\Folder\Somewhere'}
+           Get-Drive $path | Should Be 'J:'
+        }
+    }
+    Context "Running outside of the FileSystem" {
+        BeforeAll { Mock Get-Provider { return 'SomewhereElse'} }
+        It "running outside of the Filesystem in L:" {
+           $path = @{Drive = @{Name = 'L:'}}
+           Get-Drive $path | Should Be 'L:'
+        }
+    }
 }
