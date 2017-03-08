@@ -5,6 +5,10 @@ function Test-IsVanillaWindow
         # Console
         return $false
     }
+    elseif ($env:TERM_PROGRAM -eq "Hyper") {
+        #Hyper.is
+        return $false
+    }
     else
     {
         # Powershell
