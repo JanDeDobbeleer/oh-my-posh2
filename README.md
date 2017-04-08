@@ -12,9 +12,7 @@ oh-my-posh
 * [Helper functions](#helper)
 * [Themes](#themes)
 
-<div id='about'/>
-
-### About
+## About
 
 A theme engine for Powershell in ConEmu inspired by the work done by Chris Benti on [PS-Config](https://github.com/chrisbenti/PS-Config). And [Oh-My-ZSH](https://github.com/robbyrussell/oh-my-zsh) on OSX and Linux (hence the name)
 More information about why I made this can be found on my [blog](https://herebedragons.io/shell-shock/).
@@ -34,11 +32,9 @@ Features:
 * Separate settings for oh-my-posh and posh-git
 * Does not mess with the default Powershell console
 
-<div id='prerequisites'/>
-<details>
-<summary>Prerequisites</summary>
+## Prerequisites
 
-You should use ConEmu to have a brilliant terminal experience on Windows. You can install it using [Chocolatey](https://chocolatey.org/) :
+You should use ConEmu to have a brilliant terminal experience on Windows. You can install it using [Chocolatey](https://chocolatey.org/):
 
 ```bash
 choco install ConEmu
@@ -47,11 +43,7 @@ choco install ConEmu
 The fonts I use are Powerline fonts, there is a great [repository](https://github.com/ryanoasis/nerd-fonts) containing them.
 I use `Meslo LG M Regular for Powerline Nerd Font` in my ConEmu setup together with custom colors You can find my theme [here](https://gist.github.com/JanJoris/71c9f1361a562f337b855b75d7bbfd28).
 
-</details>
-
-<div id='installation'/>
-<details>
-<summary>Installation</summary>
+## Installation
 
 You need to use the the [PowerShell Gallery](https://www.powershellgallery.com/packages/oh-my-posh/) to install oh-my-posh.
 
@@ -62,11 +54,7 @@ Install-Module posh-git -Scope CurrentUser
 Install-Module oh-my-posh -Scope CurrentUser
 ```
 
-</details>
-
-<div id='configuration'/>
-<details>
-<summary>Configuration</summary>
+## Configuration
 
 List the current configuration:
 
@@ -89,11 +77,7 @@ Also do not forget the Posh-Git settings itself (enable the stash indication for
 $GitPromptSettings
 ```
 
-</details>
-
-<div id='helper'/>
-<details>
-<summary>Helper functions</summary>
+## Helper functions
 
 `Set-Theme`:  set a theme from the Themes directory. If no match is found, it will not be changed. Autocomplete is available to list and complete available themes.
 
@@ -109,11 +93,7 @@ Set-Theme paradox
 
 ![Theme](http://janjoris.github.com/img/showcolors.png)
 
-</details>
-
-<div id='themes'/>
-<details>
-<summary>Themes</summary>
+## Themes
 
 ### Agnoster
 
@@ -143,9 +123,7 @@ Set-Theme paradox
 
 ![Theme](https://herebedragons.io/img/fish.png)
 
-<div id='owntheme'/>
-Creating your own theme
------------------------
+## Creating your own theme
 
 If you want to create a theme it can be done rather easily by adding a `mytheme.psm1` file in the folder indicated in `$ThemeSettings.MyThemesLocation` (the folder defaults to `~\Documents\WindowsPowerShell\PoshThemes`, feel free to change it).
 The only required function is Write-Theme, you can use the following template to get started:
@@ -178,8 +156,6 @@ Set-Theme mytheme
 If you want to include your theme in oh-my-posh, send me a PR and I'll try to give feedback ASAP.
 
 Happy theming!
-
-</details>
 
 ### Based on work by
 
