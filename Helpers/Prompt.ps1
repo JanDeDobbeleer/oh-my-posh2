@@ -7,6 +7,10 @@ function Test-IsVanillaWindow {
         # Hyper.is
         return $false
     }
+    elseif ($env:TERM_PROGRAM -eq "vscode") {
+        # Visual Studio Code 
+        return $false
+    }
     else {
         # Powershell
         return $true
