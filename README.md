@@ -81,6 +81,12 @@ Also do not forget the Posh-Git settings itself (enable the stash indication for
 $GitPromptSettings
 ```
 
+Hide your `username@domain` when not in a virtual machine for the Agnoster, Fish, Honukai, Paradox and Sorin themes:
+
+```bash
+$DefaultUser = 'yourUsernameHere'
+```
+
 ## Helper functions
 
 `Set-Theme`:  set a theme from the Themes directory. If no match is found, it will not be changed. Autocomplete is available to list and complete available themes.

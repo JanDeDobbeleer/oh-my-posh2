@@ -111,3 +111,51 @@ Describe "Get-Drive" {
         }
     }
 }
+
+Describe "Test-NotDefaultUser" {
+    Context "With default user set" {
+        BeforeAll { $DefaultUser = 'name' }
+        It "same username gives 'false'" {
+            $user = 'name'
+            Test-NotDefaultUser($user) | Should Be $false
+        }
+        It "different username gives 'false'" {
+            $user = 'differentName'
+            Test-NotDefaultUser($user) | Should Be $true
+        }
+        It "same username and outside VirtualEnv gives 'false'" {
+            Mock Test-VirtualEnv { return $false }            
+            $user = 'name'
+            Test-NotDefaultUser($user) | Should Be $false
+        }
+        It "same username and inside VirtualEnv same default user gives 'true'" {
+            Mock Test-VirtualEnv { return $true }
+            $user = 'name'
+            Test-NotDefaultUser($user) | Should Be $true
+        }
+        It "different username and inside VirtualEnv same default user gives 'true'" {
+            Mock Test-VirtualEnv { return $true }
+            $user = 'differentName'
+            Test-NotDefaultUser($user) | Should Be $true
+        }
+    }
+    Context "With no default user set" {
+        BeforeAll { $DefaultUser = $null }
+        It "no username gives 'true'" {
+            Test-NotDefaultUser | Should Be $true
+        }
+        It "different username gives 'true'" {
+            $user = 'differentName'
+            Test-NotDefaultUser($user) | Should Be $true
+        }
+        It "different username and outside VirtualEnv gives 'true'" {
+            Mock Test-VirtualEnv { return $false }                        
+            $user = 'differentName'
+            Test-NotDefaultUser($user) | Should Be $true
+        }
+        It "no username and inside VirtualEnv gives 'true'" {
+            Mock Test-VirtualEnv { return $true }                        
+            Test-NotDefaultUser($user) | Should Be $true
+        }
+    }
+}

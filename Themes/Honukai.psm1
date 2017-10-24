@@ -12,13 +12,16 @@ function Write-Theme {
     Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.PromptHighlightColor
     # write user
     $user = [Environment]::UserName
-    Write-Prompt -Object " $user" -ForegroundColor $sl.Colors.PromptHighlightColor
-    # write at (devicename)
-    $device = $env:computername
-    Write-Prompt -Object " at" -ForegroundColor $sl.Colors.PromptForegroundColor
-    Write-Prompt -Object " $device" -ForegroundColor $sl.Colors.GitDefaultColor
-    # write in (folder)
-    Write-Prompt -Object " in" -ForegroundColor $sl.Colors.PromptForegroundColor
+    if (Test-NotDefaultUser($user)) {
+        Write-Prompt -Object " $user" -ForegroundColor $sl.Colors.PromptHighlightColor
+        # write at (devicename)
+        $device = $env:computername
+        Write-Prompt -Object " at" -ForegroundColor $sl.Colors.PromptForegroundColor
+        Write-Prompt -Object " $device" -ForegroundColor $sl.Colors.GitDefaultColor
+        # write in for folder
+        Write-Prompt -Object " in" -ForegroundColor $sl.Colors.PromptForegroundColor
+    }
+    # write folder
     $prompt = Get-FullPath -dir $pwd
     Write-Prompt -Object " $prompt " -ForegroundColor $sl.Colors.AdminIconForegroundColor
     # write on (git:branchname status)    

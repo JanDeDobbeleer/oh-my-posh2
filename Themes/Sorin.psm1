@@ -19,7 +19,9 @@ function Write-Theme {
     }
 
     $user = [Environment]::UserName
-    Write-Prompt -Object "$user " -ForegroundColor $sl.Colors.PromptForegroundColor
+    if (Test-NotDefaultUser($user)) {
+        Write-Prompt -Object "$user " -ForegroundColor $sl.Colors.PromptForegroundColor
+    }
 
     # Writes the drive portion
     Write-Prompt -Object "$(Get-ShortPath -dir $pwd) " -ForegroundColor $sl.Colors.DriveForegroundColor
