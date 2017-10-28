@@ -59,6 +59,7 @@ FunctionsToExport = @('Show-Colors',
                       'Save-CursorPosition',
                       'Pop-CursorPosition',
                       'Set-CursorUp',
+                      'Test-NotDefaultUser',
                       'Test-VirtualEnv',
                       'Get-VirtualEnvName')
 
