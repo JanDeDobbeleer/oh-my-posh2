@@ -58,6 +58,23 @@ Install-Module posh-git -Scope CurrentUser
 Install-Module oh-my-posh -Scope CurrentUser
 ```
 
+Enable engine in your PowerShell profile:
+
+```bash
+if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
+notepad $PROFILE
+```
+
+Append following lines to your PowerShell profile:
+
+```bash
+Import-Module posh-git
+Import-Module oh-my-posh
+Set-Theme paradox
+```
+
+Last command sets theme for the console. Check available themes list below.
+
 ## Configuration
 
 List the current configuration:
