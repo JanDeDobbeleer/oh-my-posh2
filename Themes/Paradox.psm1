@@ -54,7 +54,8 @@ function Write-Theme {
     $timeStamp = Get-Date -UFormat %r
     $timestamp = "[$timeStamp]"
 
-    Set-CursorForRightBlockWrite -textLength $timestamp.Length
+    $timestampStartAt = [System.Text.Encoding]::GetEncoding("UTF-8").GetByteCount($timestamp)
+    Set-CursorForRightBlockWrite -textLength $timestampStartAt
 
     Write-Host $timeStamp -ForegroundColor $sl.Colors.PromptForegroundColor
 
