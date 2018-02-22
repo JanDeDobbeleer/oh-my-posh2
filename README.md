@@ -2,6 +2,7 @@ oh-my-posh
 ==========
 
 [![Build status][build-status-badge]][build-status]
+[![Travis build status][travis-build-status-badge]][travis-build-status]
 [![Coverage Status][coverage-status-badge]][coverage-status]
 [![Gitter][gitter-badge]][gitter]
 [![PS Gallery][psgallery-badge]][powershell-gallery]
@@ -199,6 +200,8 @@ Happy theming!
 
 [build-status-badge]: https://img.shields.io/appveyor/ci/janjoris/oh-my-posh/master.svg?maxAge=2592000
 [build-status]: https://ci.appveyor.com/project/JanJoris/oh-my-posh
+[travis-build-status-badge]: https://travis-ci.org/JanJoris/oh-my-posh.svg?branch=master
+[travis-build-status]: https://travis-ci.org/JanJoris/oh-my-posh
 [coverage-status-badge]: https://coveralls.io/repos/github/JanJoris/oh-my-posh/badge.svg
 [coverage-status]: https://coveralls.io/github/JanJoris/oh-my-posh
 [gitter-badge]: https://badges.gitter.im/oh-my-posh/Lobby.svg

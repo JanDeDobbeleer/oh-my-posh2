@@ -1,0 +1,23 @@
+language: generic
+
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode9.1
+      before_install:
+        - brew update
+        - brew tap caskroom/cask
+        - brew cask install powershell
+    - os: linux
+      dist: trusty
+      sudo: required
+      addons:
+        apt:
+          sources:
+            - sourceline: deb [arch=amd64] https://packages.microsoft.com/ubuntu/14.04/prod trusty main
+              key_url: https://packages.microsoft.com/keys/microsoft.asc
+          packages:
+            - powershell
+
+script:
+  - pwsh -c 'Install-Module Pester -Force -Scope CurrentUser; Invoke-Pester'
