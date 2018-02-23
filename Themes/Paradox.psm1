@@ -54,9 +54,10 @@ function Write-Theme {
     $timeStamp = Get-Date -UFormat %r
     $timestamp = "[$timeStamp]"
 
-    Set-CursorForRightBlockWrite -textLength $timestamp.Length
+    $prompt += Set-CursorForRightBlockWrite -textLength $timestamp.Length
+    $prompt += Write-Prompt $timeStamp -ForegroundColor $sl.Colors.PromptForegroundColor
 
-    Write-Host $timeStamp -ForegroundColor $sl.Colors.PromptForegroundColor
+    $prompt += Set-Newline
 
     if ($with) {
         $prompt += Write-Prompt -Object "$($with.ToUpper()) " -BackgroundColor $sl.Colors.WithBackgroundColor -ForegroundColor $sl.Colors.WithForegroundColor

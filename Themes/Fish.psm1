@@ -8,21 +8,18 @@ function Write-Theme {
         $with
     )
 
-    # Create the right block first, set to 1 line up on the right
-    Save-CursorPosition
     $date = Get-Date -UFormat %d-%m-%Y
     $timeStamp = Get-Date -UFormat %R
 
     $leftText = "$($sl.PromptSymbols.SegmentBackwardSymbol) $date $($sl.PromptSymbols.SegmentSeparatorBackwardSymbol) $timeStamp "
-    Set-CursorUp -lines 1
-    Set-CursorForRightBlockWrite -textLength $leftText.Length
+    $prompt += Set-CursorUp -lines 1
+    $prompt += Set-CursorForRightBlockWrite -textLength $leftText.Length
 
-    $prompt = Write-Prompt -Object "$($sl.PromptSymbols.SegmentBackwardSymbol)" -ForegroundColor $sl.Colors.PromptBackgroundColor -BackgroundColor $sl.Colors.PromptHighlightColor
+    $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentBackwardSymbol)" -ForegroundColor $sl.Colors.PromptBackgroundColor -BackgroundColor $sl.Colors.PromptHighlightColor
     $prompt += Write-Prompt " $date $($sl.PromptSymbols.SegmentSeparatorBackwardSymbol) $timeStamp " -ForegroundColor $sl.Colors.PromptForegroundColor -BackgroundColor $sl.Colors.PromptBackgroundColor
 
-    Pop-CursorPosition
-
     # Write the prompt
+    $prompt += Set-Newline
     $prompt += Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.PromptForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
 
     #check the last command state and indicate if failed
