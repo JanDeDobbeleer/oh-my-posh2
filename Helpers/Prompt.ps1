@@ -171,7 +171,7 @@ function Set-CursorForRightBlockWrite {
     $rawUI = $Host.UI.RawUI
     $width = $rawUI.BufferSize.Width
     $space = $width - $textLength
-    Write-Host "$escapeChar[$($space)G" -NoNewline
+    return "$escapeChar[$($space)G"
 }
 
 function Reset-CursorPosition {
@@ -180,20 +180,16 @@ function Reset-CursorPosition {
     $host.UI.RawUI.CursorPosition = $postion
 }
 
-function Save-CursorPosition {
-    Write-Host "$escapeChar[s" -NoNewline
-}
-
-function Pop-CursorPosition {
-    Write-Host "$escapeChar[u" -NoNewline
-}
-
 function Set-CursorUp {
     param(
         [int]
         $lines
     )
-    Write-Host "$escapeChar[$($lines)A" -NoNewline
+    return "$escapeChar[$($lines)A"
+}
+
+function Set-Newline {
+    return "$escapeChar[E"
 }
 
 $escapeChar = [char]27

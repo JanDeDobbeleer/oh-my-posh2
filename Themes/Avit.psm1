@@ -40,8 +40,9 @@ function Write-Theme {
         $timeStamp = Get-TimeSinceLastCommit
     }
 
-    Set-CursorForRightBlockWrite -textLength $timestamp.Length
-    Write-Host $timeStamp -ForegroundColor $sl.Colors.PromptBackgroundColor
+    $prompt += Set-CursorForRightBlockWrite -textLength $timestamp.Length
+    $prompt += Write-Prompt $timeStamp -ForegroundColor $sl.Colors.PromptBackgroundColor
+    $prompt += Set-Newline
 
     if (Test-VirtualEnv) {
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.VirtualEnvSymbol) $(Get-VirtualEnvName) " -BackgroundColor $sl.Colors.VirtualEnvBackgroundColor -ForegroundColor $sl.Colors.VirtualEnvForegroundColor
