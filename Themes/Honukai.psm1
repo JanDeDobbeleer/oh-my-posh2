@@ -22,7 +22,7 @@ function Write-Theme {
         $prompt += Write-Prompt -Object " in" -ForegroundColor $sl.Colors.PromptForegroundColor
     }
     # write folder
-    $prompt = Get-FullPath -dir $pwd
+    $prompt += Get-FullPath -dir $pwd
     $prompt += Write-Prompt -Object " $prompt " -ForegroundColor $sl.Colors.AdminIconForegroundColor
     # write on (git:branchname status)
     $status = Get-VCSStatus
@@ -39,7 +39,7 @@ function Write-Theme {
     }
     # write [time]
     $timeStamp = Get-Date -Format T
-    Write-Host "[$timeStamp]" -ForegroundColor $sl.Colors.PromptForegroundColor
+    $prompt += Write-Prompt "[$timeStamp]" -ForegroundColor $sl.Colors.PromptForegroundColor
     # check for elevated prompt
     If (Test-Administrator) {
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.ElevatedSymbol) " -ForegroundColor $sl.Colors.AdminIconForegroundColor
@@ -54,6 +54,7 @@ function Write-Theme {
         $prompt += Write-Prompt -Object "$($with.ToUpper()) " -BackgroundColor $sl.Colors.WithBackgroundColor -ForegroundColor $sl.Colors.WithForegroundColor
     }
 
+    $prompt += Set-Newline
     $prompt += Write-Prompt -Object $sl.PromptSymbols.PromptIndicator -ForegroundColor $foregroundColor
     $prompt += ' '
     $prompt

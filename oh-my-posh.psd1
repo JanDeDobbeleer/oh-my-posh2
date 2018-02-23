@@ -56,14 +56,13 @@ FunctionsToExport = @('Show-Colors',
                       'Get-ShortPath',
                       'Get-FullPath',
                       'Set-CursorForRightBlockWrite',
-                      'Save-CursorPosition',
-                      'Pop-CursorPosition',
                       'Set-CursorUp',
                       'Test-VirtualEnv',
                       'Get-VirtualEnvName',
                       'Test-NotDefaultUser',
                       'Test-Administrator',
-                      'Get-ComputerName')
+                      'Get-ComputerName',
+                      'Set-Newline')
 
 # Private data to pass to the module specified in RootModule. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
