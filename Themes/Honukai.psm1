@@ -22,8 +22,8 @@ function Write-Theme {
         $prompt += Write-Prompt -Object " in" -ForegroundColor $sl.Colors.PromptForegroundColor
     }
     # write folder
-    $prompt += Get-FullPath -dir $pwd
-    $prompt += Write-Prompt -Object " $prompt " -ForegroundColor $sl.Colors.AdminIconForegroundColor
+    $dir = Get-FullPath -dir $pwd
+    $prompt += Write-Prompt -Object " $dir " -ForegroundColor $sl.Colors.AdminIconForegroundColor
     # write on (git:branchname status)
     $status = Get-VCSStatus
     if ($status) {

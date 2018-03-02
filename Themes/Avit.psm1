@@ -11,9 +11,9 @@ function Write-Theme {
 
     $prompt = Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.PromptForegroundColor
 
-    $prompt = Get-FullPath -dir $pwd
+    $dir = Get-FullPath -dir $pwd
 
-    $prompt += Write-Prompt -Object $prompt -ForegroundColor $sl.Colors.PromptForegroundColor
+    $prompt += Write-Prompt -Object $dir -ForegroundColor $sl.Colors.PromptForegroundColor
 
     $status = Get-VCSStatus
     if ($status) {
