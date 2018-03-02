@@ -179,7 +179,7 @@ function Write-Theme
 $sl = $global:ThemeSettings #local settings
 ````
 
-Feel free to use the public helper functions `Get-VCSStatus`, `Get-VcsInfo`, `Get-Drive`, `Get-ShortPath`, `Set-CursorForRightBlockWrite`, `Save-CursorPosition`, `Pop-CursorPosition`, `Set-CursorUp` or add your own logic completely.
+Feel free to use the public helper functions `Get-VCSStatus`, `Get-VcsInfo`, `Get-Drive`, `Get-ShortPath`, `Set-CursorForRightBlockWrite`, `Set-CursorUp`, `Set-Newline` or add your own logic completely.
 
 To test the output in ConEmu, just switch to your theme:
 
