@@ -56,6 +56,20 @@ function Get-VcsInfo {
         }
 
         $vcInfo = $sl.GitSymbols.BranchSymbol;
+
+        if ($status.Upstream) {
+            $originSymbol = $null
+            $origin = $status.Upstream -replace "/[a-z]*"
+            $originUrl = & { git remote get-url $origin }
+            
+            if ($originUrl.Contains("github")) {
+                $originSymbol = $sl.GitSymbols.OriginSymbols.GithubSymbol
+            }
+
+            if($originSymbol) {
+                $vcInfo = "$originSymbol $vcInfo" 
+            }
+        }
         
         $branchStatusSymbol = $null
 

@@ -15,6 +15,9 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         BranchIdenticalStatusToSymbol    = [char]::ConvertFromUtf32(0x2263)
         BranchAheadStatusSymbol          = [char]::ConvertFromUtf32(0x2191)
         BranchBehindStatusSymbol         = [char]::ConvertFromUtf32(0x2193)
+        OriginSymbols                    = @{
+            GithubSymbol                     = [char]::ConvertFromUtf32(0xE709)
+        }
     }
     PromptSymbols                    = @{
         StartSymbol                      = ' '
