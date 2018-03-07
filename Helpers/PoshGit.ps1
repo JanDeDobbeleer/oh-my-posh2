@@ -57,18 +57,18 @@ function Get-VcsInfo {
 
         $vcInfo = $sl.GitSymbols.BranchSymbol;
 
-        if ($status.Upstream) {
+        if ($status.Upstream -and $sl.GitSymbols.OriginSymbols.Enabled) {
             $originSymbol = $null
-            $origin = $status.Upstream -replace "/[a-z]*"
-            $originUrl = & { git remote get-url $origin }
+            $origin = $status.Upstream -replace "/.*"
+            $originUrl = git remote get-url $origin
             
-            if ($originUrl -contains "github") {
+            if ($originUrl.Contains("github")) {
                 $originSymbol = $sl.GitSymbols.OriginSymbols.GithubSymbol
             } 
-            else if ($originUrl -contains "bitbucket") {
+            elseif ($originUrl.Contains("bitbucket")) {
                 $originSymbol = $sl.GitSymbols.OriginSymbols.BitbucketSymbol
             }
-            else if ($originUrl -contains "gitlab") {
+            elseif ($originUrl.Contains("gitlab")) {
                 $originSymbol = $sl.GitSymbols.OriginSymbols.GitLabSymbol
             }
 
