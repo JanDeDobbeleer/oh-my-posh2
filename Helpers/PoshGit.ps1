@@ -62,8 +62,14 @@ function Get-VcsInfo {
             $origin = $status.Upstream -replace "/[a-z]*"
             $originUrl = & { git remote get-url $origin }
             
-            if ($originUrl.Contains("github")) {
+            if ($originUrl -contains "github") {
                 $originSymbol = $sl.GitSymbols.OriginSymbols.GithubSymbol
+            } 
+            else if ($originUrl -contains "bitbucket") {
+                $originSymbol = $sl.GitSymbols.OriginSymbols.BitbucketSymbol
+            }
+            else if ($originUrl -contains "gitlab") {
+                $originSymbol = $sl.GitSymbols.OriginSymbols.GitLabSymbol
             }
 
             if($originSymbol) {
