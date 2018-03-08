@@ -7,18 +7,26 @@ environment:
     CA_KEY:
       secure: 3kVQxECrq007jkGdai1dUpk35w+YigWkfk5C5aXi2lAX0zU+oOI1SYkGo2o6NbIp
 version: 2.0.{build}
-image: Visual Studio 2017
+image:
+- Visual Studio 2017
+- Ubuntu
 build_script:
   - ps: (Get-Content '.\oh-my-posh.psd1' -Raw).Replace('1.0.0.0', $ENV:APPVEYOR_BUILD_VERSION) | Out-File -Encoding 'UTF8' '.\oh-my-posh.psd1'
 before_test:
-  - ps: .\Build\setup_test_env.ps1
+  - ps: >-
+      if ($isWindows) {
+        .\Build\setup_test_env.ps1
+      }
   - pwsh: .\Build\setup_test_env.ps1
 test_script:
-  - ps: .\Build\test_script_v5.ps1
+  - ps: >-
+      if ($isWindows) {
+        .\Build\test_script_v5.ps1
+      }
   - pwsh: Invoke-Pester
 deploy_script:
   - ps: >-
-      if ($ENV:APPVEYOR_REPO_BRANCH -eq 'master' -and [string]::IsNullOrWhiteSpace($ENV:APPVEYOR_PULL_REQUEST_NUMBER)) {
+      if ($isWindows -and $ENV:APPVEYOR_REPO_BRANCH -eq 'master' -and [string]::IsNullOrWhiteSpace($ENV:APPVEYOR_PULL_REQUEST_NUMBER)) {
           Publish-Module -path . -NuGetApiKey $env:NG_KEY -Verbose
           #Create GitHub release
           Write-Host 'Starting GitHub release'
