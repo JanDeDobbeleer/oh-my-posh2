@@ -15,7 +15,8 @@ function Write-Theme {
     if (Test-NotDefaultUser($user)) {
         $prompt += Write-Prompt -Object " $user" -ForegroundColor $sl.Colors.PromptHighlightColor
         # write at (devicename)
-        $device = $env:computername
+        $device = (Get-Culture).TextInfo
+        $device = $device.ToTitleCase($env:computername.ToLower())
         $prompt += Write-Prompt -Object " at" -ForegroundColor $sl.Colors.PromptForegroundColor
         $prompt += Write-Prompt -Object " $device" -ForegroundColor $sl.Colors.GitDefaultColor
         # write in for folder
