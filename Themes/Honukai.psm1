@@ -54,9 +54,9 @@ function Write-Theme {
         $prompt += Write-Prompt -Object "$($with.ToUpper()) " -BackgroundColor $sl.Colors.WithBackgroundColor -ForegroundColor $sl.Colors.WithForegroundColor
     }
 
-    $prompt += Set-Newline
+    $prompt += Write-Prompt "`n"
     $prompt += Write-Prompt -Object $sl.PromptSymbols.PromptIndicator -ForegroundColor $foregroundColor
-    $prompt += ' '
+    $prompt += '  '
     $prompt
 }
 
