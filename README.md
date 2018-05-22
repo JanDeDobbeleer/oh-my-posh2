@@ -206,7 +206,7 @@ Happy theming!
 [coverage-status]: https://coveralls.io/github/JanDeDobbeleer/oh-my-posh
 [gitter-badge]: https://badges.gitter.im/oh-my-posh/Lobby.svg
 [gitter]: https://gitter.im/oh-my-posh/general?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-[psgallery-badge]: https://img.shields.io/badge/install-PS%20Gallery-blue.svg
+[psgallery-badge]: https://img.shields.io/powershellgallery/dt/oh-my-posh.svg
 [powershell-gallery]: https://www.powershellgallery.com/packages/oh-my-posh/
 [chrisbenti-psconfig]: https://github.com/chrisbenti/PS-Config
 [keithdahlby-poshgit]: https://github.com/dahlbyk/posh-git
