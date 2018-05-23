@@ -21,10 +21,10 @@ GUID = '7d7c4a78-e2fe-4e5f-9510-34ac893e4562'
 CompanyName = 'Unknown'
 
 # Author of this module
-Author = 'JanJoris'
+Author = 'Jan De Dobbeleer'
 
 # Copyright statement for this module
-Copyright = '(c) 2016 JanJoris. All rights reserved.'
+Copyright = '(c) 2018 Jan De Dobbeleer. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Theming capabilities for the PowerShell prompt in ConEmu'
@@ -73,10 +73,10 @@ PrivateData = @{
         Tags = @('git', 'agnoster', 'theme', 'zsh', 'posh-git', 'prompt', 'paradox')
 
         # A URL to the license for this module.
-        LicenseUri = 'https://github.com/JanJoris/oh-my-posh/blob/master/LICENSE'
+        LicenseUri = 'https://github.com/JanDeDobbeleer/oh-my-posh/blob/master/LICENSE'
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://github.com/JanJoris/oh-my-posh'
+        ProjectUri = 'https://github.com/JanDeDobbeleer/oh-my-posh'
 
     } # End of PSData hashtable
 

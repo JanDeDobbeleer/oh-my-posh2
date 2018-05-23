@@ -5,7 +5,7 @@ environment:
     NG_KEY:
       secure: tN2AWqN8DMHjaUvl6AbwwMK1GrF6K0xPiCSGRh1SWZGex4kgVAx+Rri1AxxPYmBg
     CA_KEY:
-      secure: yyBVxcqc8JCSyOJf5I8ufwmwjkgMxouJ1ZyuCkAXdffDDU2VfZCZHK9lkHeph3SM
+      secure: 3kVQxECrq007jkGdai1dUpk35w+YigWkfk5C5aXi2lAX0zU+oOI1SYkGo2o6NbIp
 version: 2.0.{build}
 image: Visual Studio 2017
 build_script:
@@ -31,7 +31,7 @@ deploy_script:
           }
           $auth = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($env:GH_KEY + ':x-oauth-basic'))
           $releaseParams = @{
-              Uri         = 'https://api.github.com/repos/janjoris/oh-my-posh/releases'
+              Uri         = 'https://api.github.com/repos/jandedobbeleer/oh-my-posh/releases'
               Method      = 'POST'
               Headers     = @{
                   Authorization = $auth
@@ -57,4 +57,3 @@ deploy_script:
           $result = Invoke-RestMethod @uploadParams
           Write-Host 'GitHub release completed'
       }
-

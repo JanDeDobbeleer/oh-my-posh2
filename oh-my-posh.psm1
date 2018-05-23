@@ -61,7 +61,6 @@ function global:Write-WithPrompt() {
     }
 
     Write-Theme -lastCommandFailed $lastCommandFailed -with $command
-    Write-Host ' ' -NoNewline
 }
 
 function Show-ThemeColors {

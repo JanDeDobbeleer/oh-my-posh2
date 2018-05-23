@@ -189,7 +189,7 @@ function Set-CursorUp {
 }
 
 function Set-Newline {
-    return "`n"
+    return Write-Prompt "`n"
 }
 
 $escapeChar = [char]27
