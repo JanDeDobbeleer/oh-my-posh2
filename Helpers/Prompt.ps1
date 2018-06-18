@@ -25,7 +25,7 @@ function Get-Home {
 
 function Test-Administrator {
     if ($PSVersionTable.Platform -eq 'Unix') {
-        return $false #TO-DO: find out how to distinguish this one
+        return (whoami) -eq 'root'
     } elseif ($PSVersionTable.Platform -eq 'Windows') {
         return $false #TO-DO: find out how to distinguish this one
     } else {
@@ -35,7 +35,11 @@ function Test-Administrator {
 
 function Get-ComputerName {
     if (Test-PsCore -and $PSVersionTable.Platform -ne 'Windows') {
-        return $env:NAME
+        if ($env:NAME) {
+            return $env:NAME
+        } else {
+            return (hostname)
+        }
     }
     return $env:COMPUTERNAME
 }
