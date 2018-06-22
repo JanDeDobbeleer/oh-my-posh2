@@ -38,7 +38,7 @@ function Get-ComputerName {
         if ($env:NAME) {
             return $env:NAME
         } else {
-            return (hostname)
+            return (uname -n)
         }
     }
     return $env:COMPUTERNAME
