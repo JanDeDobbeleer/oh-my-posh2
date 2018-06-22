@@ -73,16 +73,3 @@ $global:PSColor = @{
         Line       = @{ Color = 'White' }
     }
 }
-
-# PSReadline options
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-if ((Get-Module PSReadline).Version.Major -lt 2) {
-    Set-PSReadlineOption -TokenKind Command -ForegroundColor DarkBlue
-    Set-PSReadlineOption -TokenKind Parameter -ForegroundColor Yellow
-}
-else {
-    Set-PSReadlineOption -Colors @{
-        "Command" = [ConsoleColor]::DarkBlue
-        "Parameter" = [ConsoleColor]::Yellow
-    }
-}
