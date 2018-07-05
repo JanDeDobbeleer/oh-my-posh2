@@ -171,7 +171,7 @@ function Set-CursorForRightBlockWrite {
     $rawUI = $Host.UI.RawUI
     $width = $rawUI.BufferSize.Width
     $space = $width - $textLength
-    return "$escapeChar[$($space)G"
+    Write-Prompt "$escapeChar[$($space)G"
 }
 
 function Reset-CursorPosition {
