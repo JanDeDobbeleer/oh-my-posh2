@@ -1,4 +1,3 @@
-#requires -Version 2 -Modules posh-git
 function Format-BranchName {
     param(
         [string]
@@ -32,6 +31,30 @@ function Get-VCSStatus {
     return $status
 }
 
+function Get-BranchSymbol($upstream) {
+    # Add remote icon instead of branchsymbol if Enabled
+    if (-not ($upstream) -or !$sl.GitSymbols.OriginSymbols.Enabled) {
+        return $sl.GitSymbols.BranchSymbol
+    }
+    $originUrl = Get-GitRemoteUrl $upstream
+    if ($originUrl.Contains("github")) {
+        return $sl.GitSymbols.OriginSymbols.Github
+    }
+    elseif ($originUrl.Contains("bitbucket")) {
+        return $sl.GitSymbols.OriginSymbols.Bitbucket
+    }
+    elseif ($originUrl.Contains("gitlab")) {
+        return $sl.GitSymbols.OriginSymbols.GitLab
+    }
+    return $sl.GitSymbols.BranchSymbol
+}
+
+function Get-GitRemoteUrl($upstream) {
+    $origin = $upstream -replace "/.*"
+    $originUrl = git remote get-url $origin
+    return $originUrl
+}
+
 
 function Get-VcsInfo {
     param(
@@ -55,8 +78,7 @@ function Get-VcsInfo {
             $branchStatusBackgroundColor = $sl.Colors.GitNoLocalChangesAndAheadColor
         }
 
-        $vcInfo = $sl.GitSymbols.BranchSymbol;
-
+        $vcInfo = Get-BranchSymbol $status.Upstream
         $branchStatusSymbol = $null
 
         if (!$status.Upstream) {
