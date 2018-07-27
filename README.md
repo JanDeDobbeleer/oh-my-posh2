@@ -59,7 +59,11 @@ Install-Module posh-git -Scope CurrentUser
 Install-Module oh-my-posh -Scope CurrentUser
 ```
 
-Enable the engine in your PowerShell profile:
+In case you're running this on PS Core, make sure to also install version 2.0.0-beta1 of `PSReadLine`
+
+    Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force
+
+To enable the engine edit your PowerShell profile:
 
 ```bash
 if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
@@ -71,14 +75,10 @@ Append the following lines to your PowerShell profile:
 ```bash
 Import-Module posh-git
 Import-Module oh-my-posh
-Set-Theme paradox
+Set-Theme Paradox
 ```
 
 The last command sets the theme for the console. Check the available themes list below.
-
-In case you're running this on PS Core, make sure to also install version 2.0.0-beta1 of `PSReadLine`
-
-    Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force
 
 ## Configuration
 
