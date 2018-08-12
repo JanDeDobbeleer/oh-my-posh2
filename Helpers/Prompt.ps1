@@ -163,7 +163,7 @@ function Get-VirtualEnvName {
 }
 
 function Test-NotDefaultUser($user) {
-    return $DefaultUser -eq $null -or $user -ne $DefaultUser -or (Test-VirtualEnv)
+    return $DefaultUser -eq $null -or $user -ne $DefaultUser
 }
 
 function Set-CursorForRightBlockWrite {
