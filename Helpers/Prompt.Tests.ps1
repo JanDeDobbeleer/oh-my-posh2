@@ -147,10 +147,10 @@ Describe "Test-NotDefaultUser" {
             $user = 'name'
             Test-NotDefaultUser($user) | Should Be $false
         }
-        It "same username and inside VirtualEnv same default user gives 'true'" {
+        It "same username and inside VirtualEnv same default user gives 'false'" {
             Mock Test-VirtualEnv { return $true }
             $user = 'name'
-            Test-NotDefaultUser($user) | Should Be $true
+            Test-NotDefaultUser($user) | Should Be $false
         }
         It "different username and inside VirtualEnv same default user gives 'true'" {
             Mock Test-VirtualEnv { return $true }
