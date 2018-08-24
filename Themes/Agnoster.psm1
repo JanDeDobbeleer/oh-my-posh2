@@ -24,7 +24,7 @@ function Write-Theme {
     }
 
     $user = [System.Environment]::UserName
-    $computer = Get-ComputerName
+    $computer = [System.Environment]::MachineName
     if (Test-NotDefaultUser($user)) {
         $prompt += Write-Prompt -Object "$user@$computer " -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
     }
