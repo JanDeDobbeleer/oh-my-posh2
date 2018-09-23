@@ -149,17 +149,23 @@ function Get-ShortPath {
         return $dir.path.Replace((Get-Drive -dir $dir), '')
     }
 }
-
 function Test-VirtualEnv {
     if ($env:VIRTUAL_ENV) {
+        return $true
+    }
+    if ($Env:CONDA_PROMPT_MODIFIER) {
         return $true
     }
     return $false
 }
 
 function Get-VirtualEnvName {
-    $virtualEnvName = ($env:VIRTUAL_ENV -split '\\')[-1]
-    return $virtualEnvName
+    if ($env:VIRTUAL_ENV) {
+        $virtualEnvName = ($env:VIRTUAL_ENV -split '\\')[-1]
+        return $virtualEnvName
+    } elseif ($Env:CONDA_PROMPT_MODIFIER) {
+        [regex]::Match($Env:CONDA_PROMPT_MODIFIER, "^\((.*)\)").Captures.Groups[1].Value;
+    }
 }
 
 function Test-NotDefaultUser($user) {
