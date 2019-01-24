@@ -33,6 +33,9 @@ function Write-Theme {
             $prompt += Write-Prompt -Object (" " + $sl.PromptSymbols.GitDirtyIndicator) -ForegroundColor $sl.Colors.GitDefaultColor
         }
     }
+    
+    $prompt += ' '
+    $prompt
 }
 
 $sl = $global:ThemeSettings #local settings
