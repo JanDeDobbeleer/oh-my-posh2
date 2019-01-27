@@ -35,12 +35,10 @@ function Set-Prompt {
         if(Test-IsVanillaWindow) {
             Write-Host -Object ($pwd.ProviderPath) -NoNewline
             Write-VcsStatus
-            return '> '
         }
 
         Reset-CursorPosition
         Write-Theme -lastCommandFailed $lastCommandFailed
-        return ' '
     }
 
     Set-Item -Path Function:prompt -Value $Prompt -Force
