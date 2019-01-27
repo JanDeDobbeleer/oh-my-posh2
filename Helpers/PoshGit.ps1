@@ -94,17 +94,17 @@ function Get-VcsInfo {
             $vcInfo = $vcInfo +  $sl.BeforeIndexSymbol
 
             if($spg.ShowStatusWhenZero -or $status.Index.Added) {
-                $vcInfo = $vcInfo +  "+$($status.Index.Added.Count) "
+                $vcInfo = $vcInfo +  "$($spg.FileAddedText)$($status.Index.Added.Count) "
             }
             if($spg.ShowStatusWhenZero -or $status.Index.Modified) {
-                $vcInfo = $vcInfo +  "~$($status.Index.Modified.Count) "
+                $vcInfo = $vcInfo +  "$($spg.FileModifiedText)$($status.Index.Modified.Count) "
             }
             if($spg.ShowStatusWhenZero -or $status.Index.Deleted) {
-                $vcInfo = $vcInfo +  "-$($status.Index.Deleted.Count) "
+                $vcInfo = $vcInfo +  "$($spg.FileRemovedText)$($status.Index.Deleted.Count) "
             }
 
             if ($status.Index.Unmerged) {
-                $vcInfo = $vcInfo +  "!$($status.Index.Unmerged.Count) "
+                $vcInfo = $vcInfo +  "$($spg.FileConflictedText)$($status.Index.Unmerged.Count) "
             }
 
             if($status.HasWorking) {
@@ -114,16 +114,16 @@ function Get-VcsInfo {
 
         if($spg.EnableFileStatus -and $status.HasWorking) {
             if($showStatusWhenZero -or $status.Working.Added) {
-                $vcInfo = $vcInfo +  "+$($status.Working.Added.Count) "
+                $vcInfo = $vcInfo +  "$($spg.FileAddedText)$($status.Working.Added.Count) "
             }
             if($spg.ShowStatusWhenZero -or $status.Working.Modified) {
-                $vcInfo = $vcInfo +  "~$($status.Working.Modified.Count) "
+                $vcInfo = $vcInfo +  "$($spg.FileModifiedText)$($status.Working.Modified.Count) "
             }
             if($spg.ShowStatusWhenZero -or $status.Working.Deleted) {
-                $vcInfo = $vcInfo +  "-$($status.Working.Deleted.Count) "
+                $vcInfo = $vcInfo +  "$($spg.FileRemovedText)$($status.Working.Deleted.Count) "
             }
             if ($status.Working.Unmerged) {
-                $vcInfo = $vcInfo +  "!$($status.Working.Unmerged.Count) "
+                $vcInfo = $vcInfo +  "$($spg.FileConflictedText)$($status.Working.Unmerged.Count) "
             }
         }
 
