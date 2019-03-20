@@ -35,7 +35,9 @@ function Test-Administrator {
 
 function Get-ComputerName {
     if (Test-PsCore -and $PSVersionTable.Platform -ne 'Windows') {
-        if ($env:NAME) {
+        if ($env:COMPUTERNAME) {
+            return $env:COMPUTERNAME
+        } elseif ($env:NAME) {
             return $env:NAME
         } else {
             return (uname -n)
