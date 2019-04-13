@@ -136,7 +136,7 @@ function Get-ShortPath {
         $shortPath =  $result -join $sl.PromptSymbols.PathSeparator
         if ($shortPath) {
             $drive = (Get-Drive -dir $dir)
-            return "$drive$($sl.PromptSymbols.PathSeparator)$shortPath"
+            return "$drive`:$($sl.PromptSymbols.PathSeparator)$shortPath"
         }
         else {
             if ($dir.path -eq (Get-Home)) {
