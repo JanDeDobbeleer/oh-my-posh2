@@ -1,7 +1,7 @@
 # Oh-My-Posh default settings
 $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
     CurrentThemeLocation             = "$PSScriptRoot\Themes\Agnoster.psm1"
-    MyThemesLocation                 = '~\Documents\WindowsPowerShell\PoshThemes'
+    MyThemesLocation                 = (Join-Path (Split-Path -Parent $PROFILE) "PoshThemes")
     ErrorCount                       = 0
     GitSymbols                       = @{
         BranchSymbol                  = [char]::ConvertFromUtf32(0xE0A0)
