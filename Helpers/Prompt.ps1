@@ -77,7 +77,7 @@ function Get-Drive {
         else {
             $root = $dir.Drive.Name
             if($root) {
-                return $root
+                return $root + ':'
             }
             else {
                 return $dir.Path.Split(':\')[0] + ':'
@@ -138,7 +138,7 @@ function Get-ShortPath {
         $shortPath =  $result -join $sl.PromptSymbols.PathSeparator
         if ($shortPath) {
             $drive = (Get-Drive -dir $dir)
-            return "$drive`:$($sl.PromptSymbols.PathSeparator)$shortPath"
+            return "$drive$($sl.PromptSymbols.PathSeparator)$shortPath"
         }
         else {
             if ($dir.path -eq (Get-Home)) {
