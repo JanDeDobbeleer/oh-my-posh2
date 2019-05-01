@@ -105,7 +105,7 @@ Describe "Get-Drive" {
             Get-Drive $path | Should Be "Test$($ThemeSettings.PromptSymbols.PathSeparator)Hello$($ThemeSettings.PromptSymbols.PathSeparator)"
         }
         It "is in C:" {
-            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Documents'}
+            $path = @{Drive = @{Name = 'C'}; Path = 'C:\Documents'}
             Get-Drive $path | Should Be 'C:'
         }
         It "is has no drive" {
