@@ -127,6 +127,9 @@ function Set-Theme {
     elseif (Test-Path "$PSScriptRoot\Themes\$($name).psm1") {
         $sl.CurrentThemeLocation = "$PSScriptRoot\Themes\$($name).psm1"
     }
+    elseif (Test-Path "$name") {
+        $sl.CurrentThemeLocation = "$name"
+    }
     else {
         Write-Host ''
         Write-Warning "Theme $name not found. Available themes are:"
