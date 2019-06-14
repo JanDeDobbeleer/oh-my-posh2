@@ -216,7 +216,7 @@ Happy theming!
 [chrisbenti-psconfig]: https://github.com/chrisbenti/PS-Config
 [keithdahlby-poshgit]: https://github.com/dahlbyk/posh-git
 [oh-my-zsh]: https://github.com/robbyrussell/oh-my-zsh
-[blog]: https://herebedragons.io/shell-shock/
+[blog]: https://blog.itdepends.be/shell-shock/
 [chocolatey]: https://chocolatey.org/
 [nerdfonts]: https://github.com/ryanoasis/nerd-fonts
 [theme-gist]: https://gist.github.com/JanDeDobbeleer/71c9f1361a562f337b855b75d7bbfd28
