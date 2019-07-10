@@ -11,24 +11,11 @@ function Format-BranchName {
 }
 
 function Get-VCSStatus {
-    $status = $null
-    $vcs_systems = @{
-        'posh-git' = 'Get-GitStatus'
-        'posh-hg' = 'Get-HgStatus'
-        'posh-svn' = 'Get-SvnStatus'
+    if (Get-Command Get-GitStatus -errorAction SilentlyContinue) {
+        $global:GitStatus = Get-GitStatus
+        return $global:GitStatus
     }
-
-    foreach ($key in $vcs_systems.Keys) {
-        $module = Get-Module -Name $key
-        if($module -and @($module).Count -gt 0) {
-            $status = (Invoke-Expression -Command ($vcs_systems[$key]))
-            if ($status) {
-                $global:GitStatus = $status
-                return $status
-            }
-        }
-    }
-    return $status
+    return $null
 }
 
 function Get-BranchSymbol($upstream) {
