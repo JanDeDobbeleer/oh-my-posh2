@@ -5,16 +5,18 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
     ErrorCount                       = 0
     GitSymbols                       = @{
         BranchSymbol                  = [char]::ConvertFromUtf32(0xE0A0)
-        BeforeStashSymbol                = '{'
-        AfterStashSymbol                 = '}'
-        DelimSymbol                      = '|'
-        LocalWorkingStatusSymbol         = '!'
-        LocalStagedStatusSymbol          = '~'
-        LocalDefaultStatusSymbol         = ''
-        BranchUntrackedSymbol            = [char]::ConvertFromUtf32(0x2262)
-        BranchIdenticalStatusToSymbol    = [char]::ConvertFromUtf32(0x2263)
-        BranchAheadStatusSymbol          = [char]::ConvertFromUtf32(0x2191)
-        BranchBehindStatusSymbol         = [char]::ConvertFromUtf32(0x2193)
+        BeforeStashSymbol             = '{'
+        BeforeIndexSymbol             = ''
+        BeforeWorkingSymbol           = ''
+        AfterStashSymbol              = '}'
+        DelimSymbol                   = '|'
+        LocalWorkingStatusSymbol      = '!'
+        LocalStagedStatusSymbol       = '~'
+        LocalDefaultStatusSymbol      = ''
+        BranchUntrackedSymbol         = [char]::ConvertFromUtf32(0x2262)
+        BranchIdenticalStatusToSymbol = [char]::ConvertFromUtf32(0x2263)
+        BranchAheadStatusSymbol       = [char]::ConvertFromUtf32(0x2191)
+        BranchBehindStatusSymbol      = [char]::ConvertFromUtf32(0x2193)
     }
     PromptSymbols                    = @{
         StartSymbol                      = ' '
@@ -29,7 +31,7 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         PathSeparator                    = [System.IO.Path]::DirectorySeparatorChar
         VirtualEnvSymbol                 = [char]::ConvertFromUtf32(0xE606)
     }
-    Colors                           = @{
+    Colors               = @{
         GitDefaultColor                  = [ConsoleColor]::DarkGreen
         GitLocalChangesColor             = [ConsoleColor]::DarkYellow
         GitNoLocalChangesAndAheadColor   = [ConsoleColor]::DarkMagenta
@@ -52,9 +54,9 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
 
 # PSColor default settings
 $global:PSColor = @{
-    File = @{
+    File    = @{
         Default    = @{ Color = 'White' }
-        Directory  = @{ Color = 'DarkBlue'}
+        Directory  = @{ Color = 'DarkBlue' }
         Hidden     = @{ Color = 'Gray'; Pattern = '^\.' }
         Code       = @{ Color = 'Magenta'; Pattern = '\.(java|c|cpp|cs|js|css|html)$' }
         Executable = @{ Color = 'Red'; Pattern = '\.(exe|bat|cmd|py|pl|ps1|psm1|vbs|rb|reg)$' }
@@ -66,9 +68,9 @@ $global:PSColor = @{
         Running = @{ Color = 'DarkGreen' }
         Stopped = @{ Color = 'DarkYellow' }
     }
-    Match = @{
+    Match   = @{
         Default    = @{ Color = 'White' }
-        Path       = @{ Color = 'Cyan'}
+        Path       = @{ Color = 'Cyan' }
         LineNumber = @{ Color = 'DarkGreen' }
         Line       = @{ Color = 'White' }
     }

@@ -56,7 +56,7 @@ function Get-VcsInfo {
         }
 
         $vcInfo = $sl.GitSymbols.BranchSymbol;
-        
+
         $branchStatusSymbol = $null
 
         if (!$status.Upstream) {
@@ -91,7 +91,7 @@ function Get-VcsInfo {
         }
 
         if($spg.EnableFileStatus -and $status.HasIndex) {
-            $vcInfo = $vcInfo +  $sl.BeforeIndexSymbol
+            $vcInfo = $vcInfo +  $sl.GitSymbols.BeforeIndexSymbol
 
             if($spg.ShowStatusWhenZero -or $status.Index.Added) {
                 $vcInfo = $vcInfo +  "$($spg.FileAddedText)$($status.Index.Added.Count) "
@@ -113,6 +113,9 @@ function Get-VcsInfo {
         }
 
         if($spg.EnableFileStatus -and $status.HasWorking) {
+            if (!$status.HasIndex) {
+                $vcInfo = $vcInfo +  $sl.GitSymbols.BeforeWorkingSymbol
+            }
             if($showStatusWhenZero -or $status.Working.Added) {
                 $vcInfo = $vcInfo +  "$($spg.FileAddedText)$($status.Working.Added.Count) "
             }
