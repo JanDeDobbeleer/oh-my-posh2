@@ -2,7 +2,7 @@ skip_tags: true
 skip_commits:
   files:
     - .github/*
-    - *.md
+    - README.md
 environment:
     GH_KEY:
       secure: 7CipYchiaJLIPf5MRNnJ2+Nk7dm+FxWkEHlASCcskJbMz+jbdz/qiseUeKCkQKHC
