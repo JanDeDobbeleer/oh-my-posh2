@@ -70,9 +70,18 @@ You need to use the [PowerShell Gallery][powershell-gallery] to install oh-my-po
 
 Install posh-git and oh-my-posh:
 
-```bash
+```powershell
 Install-Module posh-git -Scope CurrentUser
 Install-Module oh-my-posh -Scope CurrentUser
+```
+
+Enable the prompt:
+
+```powershell
+# Start the default settings
+Set-Prompt
+# Alternatively set the desired theme:
+Set-Theme Agnoster
 ```
 
 In case you're running this on PS Core, make sure to also install version 2.0.0-beta1 of `PSReadLine`

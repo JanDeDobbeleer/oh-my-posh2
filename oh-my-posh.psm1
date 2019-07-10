@@ -6,22 +6,6 @@
 
 <#
         .SYNOPSIS
-        Method called at each launch of Powershell
-
-        .DESCRIPTION
-        Sets up things needed in each console session, aside from prompt
-#>
-function Start-Up {
-    if(Test-Path -Path ~\.last) {
-        (Get-Content -Path ~\.last) | Set-Location
-        Remove-Item -Path ~\.last
-    }
-
-    Set-Prompt
-}
-
-<#
-        .SYNOPSIS
         Generates the prompt before each line in the console
 #>
 function Set-Prompt {
@@ -217,4 +201,3 @@ Register-ArgumentCompleter `
 
 $sl = $global:ThemeSettings #local settings
 $sl.ErrorCount = $global:error.Count
-Start-Up # Executes the Start-Up function, better encapsulation
