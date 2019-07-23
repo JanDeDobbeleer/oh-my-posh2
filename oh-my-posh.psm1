@@ -29,7 +29,7 @@ function Set-Prompt {
             $folder = (Get-Item $location.Path).Name
             $prompt += "$([char]27)]9;12$([char]7)"
             $prompt += "$([char]27)]2;$($folder)$([char]7)"
-            if ($loc.Provider.Name -eq "FileSystem") {
+            if ($location.Provider.Name -eq "FileSystem") {
                 $prompt += "$([char]27)]9;9;`"$($location.Path)`"$([char]7)"
             }
         }
