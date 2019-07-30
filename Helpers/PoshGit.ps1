@@ -160,20 +160,6 @@ function Get-VcsInfo {
             $vcInfo = $vcInfo +  "$($sl.GitSymbols.BeforeStashSymbol)$($status.StashCount)$($sl.GitSymbols.AfterStashSymbol) "
         }
 
-        if ($WindowTitleSupported -and $spg.EnableWindowTitle) {
-            if( -not $Global:PreviousWindowTitle ) {
-                $Global:PreviousWindowTitle = $Host.UI.RawUI.WindowTitle
-            }
-            $repoName = Split-Path -Leaf -Path (Split-Path -Path $status.GitDir)
-            $prefix = if ($spg.EnableWindowTitle -is [string]) {
-                $spg.EnableWindowTitle
-            }
-            else {
-                ''
-            }
-            $Host.UI.RawUI.WindowTitle = "$script:adminHeader$prefix$repoName [$($status.Branch)]"
-        }
-
         return New-Object PSObject -Property @{
             BackgroundColor = $branchStatusBackgroundColor
             VcInfo          = $vcInfo.Trim()
