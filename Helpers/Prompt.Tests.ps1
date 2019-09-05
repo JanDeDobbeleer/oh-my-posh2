@@ -13,6 +13,7 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         SegmentSeparatorForwardSymbol  = '>'
         SegmentSeparatorBackwardSymbol = '<'
         PathSeparator                  = '\'
+        HomeSymbol                     = '*'
     }
 }
 
@@ -93,12 +94,12 @@ Describe "Get-Drive" {
         It "is in the $HOME folder" {
             Mock Get-Home {return 'C:\Users\Jan'}
             $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan'}
-            Get-Drive $path | Should Be '~'
+            Get-Drive $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
         }
         It "is somewhere in the $HOME folder" {
             Mock Get-Home {return 'C:\Users\Jan'}
             $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan\Git\Somewhere'}
-            Get-Drive $path | Should Be '~'
+            Get-Drive $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
         }
         It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' with provider X:" {
             $path = @{Drive = @{Name = 'X:'}; Path = 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello'}
@@ -127,6 +128,41 @@ Describe "Get-Drive" {
         It "running outside of the Filesystem in L:" {
             $path = @{Drive = @{Name = 'L:'}; Path = 'L:\Documents'}
             Get-Drive $path | Should Be 'L:'
+        }
+    }
+}
+
+Describe "Get-FullPath" {
+    Context "Running in the FileSystem" {
+        BeforeAll { Mock Get-Provider { return 'FileSystem'} }
+        It "is in the $HOME folder" {
+            Mock Get-Home {return 'C:\Users\Jan'}
+            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan'}
+            Get-FullPath $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
+        }
+        It "is somewhere in the $HOME folder" {
+            Mock Get-Home {return 'C:\Users\Jan'}
+            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan\Git\Somewhere'}
+            Get-FullPath $path | Should BeLike "$($ThemeSettings.PromptSymbols.HomeSymbol)*"
+        }
+    }
+}
+
+Describe "Get-ShortPath" {
+    Context "Running in the FileSystem" {
+        BeforeAll { 
+            Mock Get-Provider { return 'FileSystem'} 
+            Mock Get-Home {return 'C:\Users\Jan'}
+        }
+        It "is in the $HOME folder" {
+            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan'}
+            Mock Get-Item { return $path }
+            Get-ShortPath $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
+        }
+        It "is somewhere in the $HOME folder" {
+            Mock Get-Item { return $path }
+            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan\Git\Somewhere'}
+            Get-ShortPath $path | Should BeLike "$($ThemeSettings.PromptSymbols.HomeSymbol)*"
         }
     }
 }

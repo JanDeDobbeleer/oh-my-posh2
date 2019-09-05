@@ -18,7 +18,7 @@ function Write-Theme {
     $prompt += Write-Prompt -Object ($sl.PromptSymbols.PromptIndicator + "  ") -ForegroundColor $promtSymbolColor
 
     # Writes the drive portion
-    $drive = "~"
+    $drive = $sl.PromptSymbols.HomeSymbol
     if ($pwd.Path -ne $HOME) {
         $drive = "$(Split-Path -path $pwd -Leaf)"
     }

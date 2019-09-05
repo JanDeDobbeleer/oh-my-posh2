@@ -68,7 +68,7 @@ function Get-Drive {
     if($provider -eq 'FileSystem') {
         $homedir = Get-Home
         if($dir.Path.StartsWith($homedir)) {
-            return '~'
+            return $sl.PromptSymbols.HomeSymbol
         }
         elseif($dir.Path.StartsWith('Microsoft.PowerShell.Core')) {
             $parts = $dir.Path.Replace('Microsoft.PowerShell.Core\FileSystem::\\','').Split('\')
@@ -101,21 +101,21 @@ function Test-IsVCSRoot {
 function Get-FullPath {
     param(
         [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PathInfo]
+        [System.Object]
         $dir
     )
 
     if ($dir.path -eq "$($dir.Drive.Name):\") {
         return "$($dir.Drive.Name):"
     }
-    $path = $dir.path.Replace((Get-Home),'~').Replace('\', $sl.PromptSymbols.PathSeparator)
+    $path = $dir.path.Replace((Get-Home),$sl.PromptSymbols.HomeSymbol).Replace('\', $sl.PromptSymbols.PathSeparator)
     return $path
 }
 
 function Get-ShortPath {
     param(
         [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PathInfo]
+        [System.Object]
         $dir
     )
 
@@ -142,7 +142,7 @@ function Get-ShortPath {
         }
         else {
             if ($dir.path -eq (Get-Home)) {
-                return '~'
+                return $sl.PromptSymbols.HomeSymbol
             }
             return "$($dir.Drive.Name):"
         }
