@@ -99,7 +99,7 @@ function Write-ColorPreview {
     )
 
     Write-Host -Object $text -NoNewline
-    Write-Host -Object '       ' -BackgroundColor $color
+    Write-Host -Object (" {0,-15}" -f $color ) -BackgroundColor $color
 }
 
 function Show-Colors {
