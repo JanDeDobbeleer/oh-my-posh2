@@ -103,9 +103,8 @@ function Write-ColorPreview {
 }
 
 function Show-Colors {
-    for($i = 0; $i -lt 16; $i++) {
-        $color = [ConsoleColor]$i
-        Write-Host -Object $color -BackgroundColor $i
+    foreach ($color in [enum]::GetValues([ConsoleColor])) {
+        Write-ColorPreview -text "" -color $color
     }
 }
 
