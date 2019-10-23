@@ -58,11 +58,21 @@ function Get-VcsInfo {
         $localChanges = $localChanges -or (($status.Untracked -gt 0) -or ($status.Added -gt 0) -or ($status.Modified -gt 0) -or ($status.Deleted -gt 0) -or ($status.Renamed -gt 0))
         #hg/svn flags
 
+        # There are local changes
         if($localChanges) {
             $branchStatusBackgroundColor = $sl.Colors.GitLocalChangesColor
         }
-        if(-not ($localChanges) -and ($status.AheadBy -gt 0)) {
+        # There are no local changes and the current branch is both ahead and behind
+        elseif(($status.AheadBy -gt 0) -and ($status.BehindBy -gt 0)) {
+            $branchStatusBackgroundColor = $sl.Colors.GitNoLocalChangesAndAheadAndBehindColor
+        }
+        # There are no local changes and the current branch is ahead only
+        elseif ($status.AheadBy -gt 0) {
             $branchStatusBackgroundColor = $sl.Colors.GitNoLocalChangesAndAheadColor
+        }
+        # There are no local changes and the current branch is behind only
+        elseif($status.BehindBy -gt 0) {
+            $branchStatusBackgroundColor = $sl.Colors.GitNoLocalChangesAndBehindColor
         }
 
         $vcInfo = Get-BranchSymbol $status.Upstream

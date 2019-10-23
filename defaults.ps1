@@ -38,23 +38,25 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         VirtualEnvSymbol                 = [char]::ConvertFromUtf32(0xE606)
     }
     Colors               = @{
-        GitDefaultColor                  = [ConsoleColor]::DarkGreen
-        GitLocalChangesColor             = [ConsoleColor]::DarkYellow
-        GitNoLocalChangesAndAheadColor   = [ConsoleColor]::DarkMagenta
-        PromptForegroundColor            = [ConsoleColor]::White
-        PromptHighlightColor             = [ConsoleColor]::DarkBlue
-        DriveForegroundColor             = [ConsoleColor]::DarkBlue
-        PromptBackgroundColor            = [ConsoleColor]::DarkBlue
-        PromptSymbolColor                = [ConsoleColor]::White
-        SessionInfoBackgroundColor       = [ConsoleColor]::Black
-        SessionInfoForegroundColor       = [ConsoleColor]::White
-        CommandFailedIconForegroundColor = [ConsoleColor]::DarkRed
-        AdminIconForegroundColor         = [ConsoleColor]::DarkYellow
-        WithBackgroundColor              = [ConsoleColor]::DarkRed
-        WithForegroundColor              = [ConsoleColor]::White
-        GitForegroundColor               = [ConsoleColor]::Black
-        VirtualEnvForegroundColor        = [ConsoleColor]::White
-        VirtualEnvBackgroundColor        = [ConsoleColor]::Red
+        GitDefaultColor                         = [ConsoleColor]::DarkGreen
+        GitLocalChangesColor                    = [ConsoleColor]::DarkYellow
+        GitNoLocalChangesAndAheadColor          = [ConsoleColor]::DarkMagenta
+        GitNoLocalChangesAndBehindColor         = [ConsoleColor]::DarkRed
+        GitNoLocalChangesAndAheadAndBehindColor = [ConsoleColor]::DarkRed
+        PromptForegroundColor                   = [ConsoleColor]::White
+        PromptHighlightColor                    = [ConsoleColor]::DarkBlue
+        DriveForegroundColor                    = [ConsoleColor]::DarkBlue
+        PromptBackgroundColor                   = [ConsoleColor]::DarkBlue
+        PromptSymbolColor                       = [ConsoleColor]::White
+        SessionInfoBackgroundColor              = [ConsoleColor]::Black
+        SessionInfoForegroundColor              = [ConsoleColor]::White
+        CommandFailedIconForegroundColor        = [ConsoleColor]::DarkRed
+        AdminIconForegroundColor                = [ConsoleColor]::DarkYellow
+        WithBackgroundColor                     = [ConsoleColor]::DarkRed
+        WithForegroundColor                     = [ConsoleColor]::White
+        GitForegroundColor                      = [ConsoleColor]::Black
+        VirtualEnvForegroundColor               = [ConsoleColor]::White
+        VirtualEnvBackgroundColor               = [ConsoleColor]::Red
     }
 }
 
