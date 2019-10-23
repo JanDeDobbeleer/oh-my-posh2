@@ -67,7 +67,7 @@ function Show-ThemeColors {
     #
     ##############################
     Write-Host -Object ''
-    $sl.Colors.Keys | Sort-Object | ForEach-Object { Write-ColorPreview -text ("{0,-35}" -f $_ ) -color $sl.Colors[$_] }
+    $sl.Colors.Keys | Sort-Object | ForEach-Object { Write-ColorPreview -text ("{0,-40}" -f $_ ) -color $sl.Colors[$_] }
     Write-Host -Object ''
 }
 
