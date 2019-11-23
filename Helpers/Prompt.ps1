@@ -20,15 +20,17 @@ function Test-PsCore {
 
 function Get-Home {
     # On Unix systems, $HOME comes with a trailing slash, unlike the Windows variant
-    return $HOME.TrimEnd('/','\')
+    return $HOME.TrimEnd('/', '\')
 }
 
 function Test-Administrator {
     if ($PSVersionTable.Platform -eq 'Unix') {
         return (whoami) -eq 'root'
-    } elseif ($PSVersionTable.Platform -eq 'Windows') {
+    }
+    elseif ($PSVersionTable.Platform -eq 'Windows') {
         return $false #TO-DO: find out how to distinguish this one
-    } else {
+    }
+    else {
         return ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')
     }
 }
@@ -37,9 +39,11 @@ function Get-ComputerName {
     if (Test-PsCore -and $PSVersionTable.Platform -ne 'Windows') {
         if ($env:COMPUTERNAME) {
             return $env:COMPUTERNAME
-        } elseif ($env:NAME) {
+        }
+        elseif ($env:NAME) {
             return $env:NAME
-        } else {
+        }
+        else {
             return (uname -n)
         }
     }
@@ -65,18 +69,18 @@ function Get-Drive {
 
     $provider = Get-Provider -path $dir.Path
 
-    if($provider -eq 'FileSystem') {
+    if ($provider -eq 'FileSystem') {
         $homedir = Get-Home
-        if($dir.Path.StartsWith($homedir)) {
+        if ($dir.Path.StartsWith($homedir)) {
             return $sl.PromptSymbols.HomeSymbol
         }
-        elseif($dir.Path.StartsWith('Microsoft.PowerShell.Core')) {
-            $parts = $dir.Path.Replace('Microsoft.PowerShell.Core\FileSystem::\\','').Split('\')
+        elseif ($dir.Path.StartsWith('Microsoft.PowerShell.Core')) {
+            $parts = $dir.Path.Replace('Microsoft.PowerShell.Core\FileSystem::\\', '').Split('\')
             return "$($parts[0])$($sl.PromptSymbols.PathSeparator)$($parts[1])$($sl.PromptSymbols.PathSeparator)"
         }
         else {
             $root = $dir.Drive.Name
-            if($root) {
+            if ($root) {
                 return $root + ':'
             }
             else {
@@ -108,7 +112,7 @@ function Get-FullPath {
     if ($dir.path -eq "$($dir.Drive.Name):\") {
         return "$($dir.Drive.Name):"
     }
-    $path = $dir.path.Replace((Get-Home),$sl.PromptSymbols.HomeSymbol).Replace('\', $sl.PromptSymbols.PathSeparator)
+    $path = $dir.path.Replace((Get-Home), $sl.PromptSymbols.HomeSymbol).Replace('\', $sl.PromptSymbols.PathSeparator)
     return $path
 }
 
@@ -121,21 +125,21 @@ function Get-ShortPath {
 
     $provider = Get-Provider -path $dir.path
 
-    if($provider -eq 'FileSystem') {
+    if ($provider -eq 'FileSystem') {
         $result = @()
         $currentDir = Get-Item $dir.path -Force
 
-        while( ($currentDir.Parent) -And ($currentDir.FullName -ne (Get-Home)) ) {
-            if( (Test-IsVCSRoot -dir $currentDir) -Or ($result.length -eq 0) ) {
-                $result = ,$currentDir.Name + $result
+        while ( ($currentDir.Parent) -And ($currentDir.FullName -ne (Get-Home)) ) {
+            if ( (Test-IsVCSRoot -dir $currentDir) -Or ($result.length -eq 0) ) {
+                $result = , $currentDir.Name + $result
             }
             else {
-                $result = ,$sl.PromptSymbols.TruncatedFolderSymbol + $result
+                $result = , $sl.PromptSymbols.TruncatedFolderSymbol + $result
             }
 
             $currentDir = $currentDir.Parent
         }
-        $shortPath =  $result -join $sl.PromptSymbols.PathSeparator
+        $shortPath = $result -join $sl.PromptSymbols.PathSeparator
         if ($shortPath) {
             $drive = (Get-Drive -dir $dir)
             return "$drive$($sl.PromptSymbols.PathSeparator)$shortPath"
@@ -165,8 +169,28 @@ function Get-VirtualEnvName {
     if ($env:VIRTUAL_ENV) {
         $virtualEnvName = ($env:VIRTUAL_ENV -split '\\')[-1]
         return $virtualEnvName
-    } elseif ($Env:CONDA_PROMPT_MODIFIER) {
+    }
+    elseif ($Env:CONDA_PROMPT_MODIFIER) {
         [regex]::Match($Env:CONDA_PROMPT_MODIFIER, "^\((.*)\)").Captures.Groups[1].Value;
+    }
+}
+
+function Get-KubernetesInfo {
+    $defaultContext = $null
+    if ($env:KUBECONFIG) {
+        $defaultContext = $env:KUBECONFIG -split [System.IO.Path]::PathSeparator | % {
+            if (Test-Path $_) {
+                Get-Content $_ | Where-Object { $_ -match '^current-context\s*:\s*(\w+)' } | ForEach-Object { $Matches[1] }
+            }
+        } | Select -First 1
+    }
+    if ($defaultContext) {
+        return New-Object PSObject -Property @{
+            ForegroundColor = $global:ThemeSettings.Colors.KubernetesForegroundColor
+            BackgroundColor = $global:ThemeSettings.Colors.KubernetesBackgroundColor
+            DefaultContext  = $defaultContext
+            Prompt          = $global:ThemeSettings.PromptSymbols.KubernetesSymbol + " " + $defaultContext + " "
+        }
     }
 }
 

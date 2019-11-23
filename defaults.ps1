@@ -45,6 +45,7 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         PathSeparator                  = [System.IO.Path]::DirectorySeparatorChar
         VirtualEnvSymbol               = [char]::ConvertFromUtf32(0xE606)
         HomeSymbol                     = '~'
+        KubernetesSymbol               = [char]::ConvertFromUtf32(0x2388)
     }
     Colors               = @{
         GitDefaultColor                         = [ConsoleColor]::DarkGreen
@@ -66,9 +67,11 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         GitForegroundColor                      = [ConsoleColor]::Black
         VirtualEnvForegroundColor               = [ConsoleColor]::White
         VirtualEnvBackgroundColor               = [ConsoleColor]::Red
+        KubernetesForegroundColor               = [ConsoleColor]::White
+        KubernetesBackgroundColor               = [ConsoleColor]::DarkCyan
     }
-    Options = @{
-        ConsoleTitle = $true
+    Options              = @{
+        ConsoleTitle  = $true
         OriginSymbols = $false
     }
 }
