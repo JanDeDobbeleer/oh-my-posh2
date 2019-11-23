@@ -178,18 +178,18 @@ function Get-VirtualEnvName {
 function Get-KubernetesInfo {
     $defaultContext = $null
     if ($env:KUBECONFIG) {
-        $defaultContext = $env:KUBECONFIG -split [System.IO.Path]::PathSeparator | % {
+        $currentContext = $env:KUBECONFIG -split [System.IO.Path]::PathSeparator | % {
             if (Test-Path $_) {
-                Get-Content $_ | Where-Object { $_ -match '^current-context\s*:\s*(\w+)' } | ForEach-Object { $Matches[1] }
+                Get-Content $_ | Where-Object { $_ -match '^current-context\s*:\s*(\S+)' } | ForEach-Object { $Matches[1] }
             }
         } | Select -First 1
     }
-    if ($defaultContext) {
+    if ($currentContext) {
         return New-Object PSObject -Property @{
             ForegroundColor = $global:ThemeSettings.Colors.KubernetesForegroundColor
             BackgroundColor = $global:ThemeSettings.Colors.KubernetesBackgroundColor
-            DefaultContext  = $defaultContext
-            Prompt          = $global:ThemeSettings.PromptSymbols.KubernetesSymbol + " " + $defaultContext + " "
+            CurrentContext  = $currentContext
+            Prompt          = $global:ThemeSettings.PromptSymbols.KubernetesSymbol + " " + $currentContext + " "
         }
     }
 }
