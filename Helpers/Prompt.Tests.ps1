@@ -117,7 +117,10 @@ Describe "Get-Provider" {
 
 Describe "Get-FormattedRootLocation" {
     Context "Running in the FileSystem" {
-        BeforeAll { Mock Get-Home {return 'C:\Users\Jan'} }
+        BeforeAll { 
+            Mock Get-Home {return 'C:\Users\Jan'} 
+            Mock Test-Windows {return $true}
+        }
         It "is in the $HOME folder" {
             $path = New-MockPath -Location 'C:\Users\Jan' -ProviderName 'FileSystem' -DriveName 'C'
             Get-FormattedRootLocation $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
@@ -128,7 +131,7 @@ Describe "Get-FormattedRootLocation" {
         }
         It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' with Drive X:" {
             $path = New-MockPath -Location 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' -ProviderName 'FileSystem' -DriveName 'X'
-            Get-FormattedRootLocation $path | Should Be "Test$($ThemeSettings.PromptSymbols.PathSeparator)Hello$($ThemeSettings.PromptSymbols.PathSeparator)"
+            Get-FormattedRootLocation $path | Should Be ''
         }
         It "is in C:" {
             $path = New-MockPath -Location 'C:\Documents' -ProviderName 'FileSystem' -DriveName 'C'

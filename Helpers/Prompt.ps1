@@ -18,6 +18,10 @@ function Test-PsCore {
     return $PSVersionTable.PSVersion.Major -gt 5
 }
 
+function Test-Windows {
+    $PSVersionTable.Platform -ne 'Unix'
+}
+
 function Get-Home {
     # On Unix systems, $HOME comes with a trailing slash, unlike the Windows variant
     return $HOME.TrimEnd('/', '\')
@@ -36,16 +40,14 @@ function Test-Administrator {
 }
 
 function Get-ComputerName {
-    if (Test-PsCore -and $PSVersionTable.Platform -ne 'Windows') {
+    if (Test-PsCore -And -Not Test-Windows) {
         if ($env:COMPUTERNAME) {
             return $env:COMPUTERNAME
         }
-        elseif ($env:NAME) {
+        if ($env:NAME) {
             return $env:NAME
         }
-        else {
-            return (uname -n)
-        }
+        return (uname -n)
     }
     return $env:COMPUTERNAME
 }
@@ -77,21 +79,19 @@ function Get-FormattedRootLocation {
         elseif ($dir.Path.StartsWith('Microsoft.PowerShell.Core')) {
             return ''
         }
-        elseif ($PSVersionTable.Platform -eq 'Unix') {
+        elseif (Test-Windows) {
+            $root = $dir.Drive.Name
+            if ($root) {
+                return $root + ':'
+            }
+            return $dir.Path.Split(':\')[0] + ':'
+        }
+        else {
             $rootLocation = $dir.Path.Split((Get-OSPathSeparator))[1]
             if ($rootLocation -ne '') {
                 return $rootLocation
             }
             return $sl.PromptSymbols.RootSymbol
-        }
-        else {
-            $root = $dir.Drive.Name
-            if ($root) {
-                return $root + ':'
-            }
-            else {
-                return $dir.Path.Split(':\')[0] + ':'
-            }
         }
     }
     else {
