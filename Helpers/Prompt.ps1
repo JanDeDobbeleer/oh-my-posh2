@@ -20,15 +20,17 @@ function Test-PsCore {
 
 function Get-Home {
     # On Unix systems, $HOME comes with a trailing slash, unlike the Windows variant
-    return $HOME.TrimEnd('/','\')
+    return $HOME.TrimEnd('/', '\')
 }
 
 function Test-Administrator {
     if ($PSVersionTable.Platform -eq 'Unix') {
         return (whoami) -eq 'root'
-    } elseif ($PSVersionTable.Platform -eq 'Windows') {
+    }
+    elseif ($PSVersionTable.Platform -eq 'Windows') {
         return $false #TO-DO: find out how to distinguish this one
-    } else {
+    }
+    else {
         return ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')
     }
 }
@@ -37,9 +39,11 @@ function Get-ComputerName {
     if (Test-PsCore -and $PSVersionTable.Platform -ne 'Windows') {
         if ($env:COMPUTERNAME) {
             return $env:COMPUTERNAME
-        } elseif ($env:NAME) {
+        }
+        elseif ($env:NAME) {
             return $env:NAME
-        } else {
+        }
+        else {
             return (uname -n)
         }
     }
@@ -179,13 +183,14 @@ function Get-VirtualEnvName {
             $virtualEnvName = $env:VIRTUAL_ENV
         }
         return $virtualEnvName
-    } elseif ($Env:CONDA_PROMPT_MODIFIER) {
+    }
+    elseif ($Env:CONDA_PROMPT_MODIFIER) {
         [regex]::Match($Env:CONDA_PROMPT_MODIFIER, "^\((.*)\)").Captures.Groups[1].Value;
     }
 }
 
 function Test-NotDefaultUser($user) {
-    return $DefaultUser -eq $null -or $user -ne $DefaultUser
+    return $null -eq $DefaultUser -or $user -ne $DefaultUser
 }
 
 function Set-CursorForRightBlockWrite {
