@@ -25,8 +25,7 @@ function Set-Prompt {
         $prompt = (Write-Theme -lastCommandFailed $lastCommandFailed)
 
         if($sl.Options.ConsoleTitle) {
-            $location = Get-Location
-            $folder = (Get-Item $location.Path).Name
+            $folder = (Get-ChildItem).Parent.BaseName
             $prompt += "$([char]27)]2;$($folder)$([char]7)"
             if ($location.Provider.Name -eq "FileSystem") {
                 $prompt += "$([char]27)]9;9;`"$($location.Path)`"$([char]7)"
