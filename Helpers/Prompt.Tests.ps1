@@ -21,6 +21,32 @@ $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path).Replace(".Tests.", ".")
 . "$here\$sut"
 
+function New-MockPath {
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Location,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ProviderName,
+        [Parameter(Mandatory = $false)]
+        [System.String]
+        $DriveName
+        )
+    
+    $provider = New-MockObject -Type System.Management.Automation.ProviderInfo 
+    $path = New-MockObject -Type System.Management.Automation.PathInfo 
+    $provider | Add-Member -Type NoteProperty -Name 'Name' -Value $ProviderName -Force
+    $path | Add-Member -Type NoteProperty -Name 'Path' -Value $Location -Force
+    $path | Add-Member -Type NoteProperty -Name 'Provider' -Value $provider -Force
+    if ($null -ne $DriveName) {
+        $driveInfo = New-MockObject -Type System.Management.Automation.PSDriveInfo
+        $driveInfo | Add-Member -Type NoteProperty -Name 'Name' -Value $DriveName -Force
+        $path | Add-Member -Type NoteProperty -Name 'Drive' -Value $driveInfo -Force
+    }
+    return $path
+}
+
 Describe "Test-IsVanillaWindow" {
     BeforeEach { Remove-Item Env:\ConEmuANSI -ErrorAction SilentlyContinue
         Remove-Item Env:\PROMPT -ErrorAction SilentlyContinue
@@ -83,67 +109,63 @@ Describe "Get-Home" {
 
 Describe "Get-Provider" {
     It "uses the provider 'AwesomeSauce'" {
-        Mock Get-Item { return @{PSProvider = @{Name = 'AwesomeSauce'}} }
-        Get-Provider $pwd | Should Be 'AwesomeSauce'
+        $expected = 'AwesomeSauce'
+        $path = New-MockPath -Location 'C:\Users\Jan\Test' -ProviderName $expected
+        Get-Provider $path | Should Be $expected
     }
 }
 
-Describe "Get-Drive" {
+Describe "Get-FormattedRootLocation" {
     Context "Running in the FileSystem" {
-        BeforeAll { Mock Get-Provider { return 'FileSystem'} }
+        BeforeAll { Mock Get-Home {return 'C:\Users\Jan'} }
         It "is in the $HOME folder" {
-            Mock Get-Home {return 'C:\Users\Jan'}
-            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan'}
-            Get-Drive $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
+            $path = New-MockPath -Location 'C:\Users\Jan' -ProviderName 'FileSystem' -DriveName 'C'
+            Get-FormattedRootLocation $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
         }
         It "is somewhere in the $HOME folder" {
-            Mock Get-Home {return 'C:\Users\Jan'}
-            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan\Git\Somewhere'}
-            Get-Drive $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
+            $path = New-MockPath -Location 'C:\Users\Jan\Git\Somewhere' -ProviderName 'FileSystem' -DriveName 'C'
+            Get-FormattedRootLocation $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
         }
-        It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' with provider X:" {
-            $path = @{Drive = @{Name = 'X:'}; Path = 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello'}
-            Get-Drive $path | Should Be "Test$($ThemeSettings.PromptSymbols.PathSeparator)Hello$($ThemeSettings.PromptSymbols.PathSeparator)"
+        It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' with Drive X:" {
+            $path = New-MockPath -Location 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' -ProviderName 'FileSystem' -DriveName 'X'
+            Get-FormattedRootLocation $path | Should Be "Test$($ThemeSettings.PromptSymbols.PathSeparator)Hello$($ThemeSettings.PromptSymbols.PathSeparator)"
         }
         It "is in C:" {
-            $path = @{Drive = @{Name = 'C'}; Path = 'C:\Documents'}
-            Get-Drive $path | Should Be 'C:'
+            $path = New-MockPath -Location 'C:\Documents' -ProviderName 'FileSystem' -DriveName 'C'
+            Get-FormattedRootLocation $path | Should Be 'C:'
         }
         It "is has no drive" {
-            $path = @{Path = 'J:\Test\Folder\Somewhere'}
-            Get-Drive $path | Should Be 'J:'
+            $path = New-MockPath -Location 'J:\Test\Folder\Somewhere' -ProviderName 'FileSystem' -DriveName 'J'
+            Get-FormattedRootLocation $path | Should Be 'J:'
         }
         It "is has no valid path" {
             if (Test-PsCore) {
                 $true | Should Be $true
             }
             else {
-                $path = @{Path = 'J\Test\Folder\Somewhere'}
-                Get-Drive $path | Should Be 'J:'
+                $path = New-MockPath -Location 'J\Test\Folder\Somewhere' -ProviderName 'FileSystem' -DriveName 'J'
+                Get-FormattedRootLocation $path | Should Be 'J:'
             }
         }
     }
     Context "Running outside of the FileSystem" {
-        BeforeAll { Mock Get-Provider { return 'SomewhereElse'} }
         It "running outside of the Filesystem in L:" {
-            $path = @{Drive = @{Name = 'L:'}; Path = 'L:\Documents'}
-            Get-Drive $path | Should Be 'L:'
+            $path = New-MockPath -Location 'L:\Documents\Somewhere' -ProviderName 'SomewhereElse' -DriveName 'L'
+            Get-FormattedRootLocation $path | Should Be 'L'
         }
     }
 }
 
 Describe "Get-FullPath" {
     Context "Running in the FileSystem" {
-        BeforeAll { Mock Get-Provider { return 'FileSystem'} }
+        BeforeAll { Mock Get-Home {return 'C:\Users\Jan'} }
         It "is in the $HOME folder" {
-            Mock Get-Home {return 'C:\Users\Jan'}
-            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan'}
+            $path = New-MockPath -Location 'C:\Users\Jan' -ProviderName 'FileSystem' -DriveName 'C'
             Get-FullPath $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
         }
         It "is somewhere in the $HOME folder" {
-            Mock Get-Home {return 'C:\Users\Jan'}
-            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan\Git\Somewhere'}
-            Get-FullPath $path | Should BeLike "$($ThemeSettings.PromptSymbols.HomeSymbol)*"
+            $path = New-MockPath -Location 'C:\Users\Jan\Git\Somewhere' -ProviderName 'FileSystem' -DriveName 'C'
+            Get-FullPath $path | Should Be "$($ThemeSettings.PromptSymbols.HomeSymbol)\Git\Somewhere"
         }
     }
 }
@@ -151,18 +173,24 @@ Describe "Get-FullPath" {
 Describe "Get-ShortPath" {
     Context "Running in the FileSystem" {
         BeforeAll { 
-            Mock Get-Provider { return 'FileSystem'} 
             Mock Get-Home {return 'C:\Users\Jan'}
+            Mock Get-OSPathSeparator {return '\'}
+        }
+        It "is in a root folder" {
+            $path = New-MockPath -Location '\Users\' -ProviderName 'FileSystem' -DriveName 'C'
+            Get-ShortPath $path | Should Be 'Users'
         }
         It "is in the $HOME folder" {
-            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan'}
-            Mock Get-Item { return $path }
+            $path = New-MockPath -Location 'C:\Users\Jan\' -ProviderName 'FileSystem' -DriveName 'C'
             Get-ShortPath $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
         }
         It "is somewhere in the $HOME folder" {
-            Mock Get-Item { return $path }
-            $path = @{Drive = @{Name = 'C:'}; Path = 'C:\Users\Jan\Git\Somewhere'}
-            Get-ShortPath $path | Should BeLike "$($ThemeSettings.PromptSymbols.HomeSymbol)*"
+            $path = New-MockPath -Location 'C:\Users\Jan\Git\Somewhere' -ProviderName 'FileSystem' -DriveName 'C'
+            Get-ShortPath $path | Should Be "$($ThemeSettings.PromptSymbols.HomeSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Somewhere"
+        }
+        It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello'" {
+            $path = New-MockPath -Location 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' -ProviderName 'FileSystem' -DriveName 'Microsoft.PowerShell.Core'
+            Get-ShortPath $path | Should Be "$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Hello"
         }
     }
 }

@@ -45,6 +45,7 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         PathSeparator                  = [System.IO.Path]::DirectorySeparatorChar
         VirtualEnvSymbol               = [char]::ConvertFromUtf32(0xE606)
         HomeSymbol                     = '~'
+        RootSymbol                     = '#'
     }
     Colors               = @{
         GitDefaultColor                         = [ConsoleColor]::DarkGreen
