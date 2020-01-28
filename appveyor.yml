@@ -4,73 +4,30 @@ skip_commits:
     - .github/*
     - README.md
 environment:
-    GH_KEY:
-      secure: 7CipYchiaJLIPf5MRNnJ2+Nk7dm+FxWkEHlASCcskJbMz+jbdz/qiseUeKCkQKHC
-    NG_KEY:
-      secure: tN2AWqN8DMHjaUvl6AbwwMK1GrF6K0xPiCSGRh1SWZGex4kgVAx+Rri1AxxPYmBg
-    CA_KEY:
-      secure: 3kVQxECrq007jkGdai1dUpk35w+YigWkfk5C5aXi2lAX0zU+oOI1SYkGo2o6NbIp
+  GH_KEY:
+    secure: 7CipYchiaJLIPf5MRNnJ2+Nk7dm+FxWkEHlASCcskJbMz+jbdz/qiseUeKCkQKHC
+  NG_KEY:
+    secure: tN2AWqN8DMHjaUvl6AbwwMK1GrF6K0xPiCSGRh1SWZGex4kgVAx+Rri1AxxPYmBg
+  CA_KEY:
+    secure: 3kVQxECrq007jkGdai1dUpk35w+YigWkfk5C5aXi2lAX0zU+oOI1SYkGo2o6NbIp
 version: 2.0.{build}
 image:
-- Visual Studio 2017
-- Ubuntu
+  - Visual Studio 2019
+  - Ubuntu
 build_script:
   - ps: (Get-Content '.\oh-my-posh.psd1' -Raw).Replace('1.0.0.0', $ENV:APPVEYOR_BUILD_VERSION) | Out-File -Encoding 'UTF8' '.\oh-my-posh.psd1'
 before_test:
-  - ps: >-
-      if ($isWindows) {
-        .\Build\setup_test_env.ps1
-      }
   - pwsh: .\Build\setup_test_env.ps1
 test_script:
-  - ps: >-
+  - pwsh: >-
       if ($isWindows) {
-        .\Build\test_script_v5.ps1
+        .\Build\test_windows.ps1
+      } 
+      else {
+        Invoke-Pester
       }
-  - pwsh: Invoke-Pester
 deploy_script:
-  - ps: >-
-      if ($isWindows -and $ENV:APPVEYOR_REPO_BRANCH -eq 'master' -and [string]::IsNullOrWhiteSpace($ENV:APPVEYOR_PULL_REQUEST_NUMBER)) {
-          Publish-Module -path . -NuGetApiKey $env:NG_KEY -Verbose
-          #Create GitHub release
-          Write-Host 'Starting GitHub release'
-          $releaseData = @{
-              tag_name         = $ENV:APPVEYOR_BUILD_VERSION
-              target_commitish = 'master'
-              name             = $ENV:APPVEYOR_BUILD_VERSION
-              draft            = $false
-              prerelease       = $false
-          }
-          $auth = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($env:GH_KEY + ':x-oauth-basic'))
-          $releaseParams = @{
-              Uri         = 'https://api.github.com/repos/jandedobbeleer/oh-my-posh/releases'
-              Method      = 'POST'
-              Headers     = @{
-                  Authorization = $auth
-              }
-              ContentType = 'application/json'
-              Body        = (ConvertTo-Json -InputObject $releaseData -Compress)
-          }
-          $result = Invoke-RestMethod @releaseParams
-          $uploadUri = $result | Select-Object -ExpandProperty upload_url
-          $uploadUri = $uploadUri -creplace '\{\?name,label\}'  #, '?name=oh-my-posh.zip'
-          $uploadUri = $uploadUri + '?name=oh-my-posh.zip'
-          $distFolder = Join-Path $env:APPVEYOR_BUILD_FOLDER dist
-          mkdir $distFolder | Out-Null
-          $excludedFiles = @(".*", "Build", "appveyor.yml", "TestsResults.xml", "dist")
-          $distFiles = Get-ChildItem $env:APPVEYOR_BUILD_FOLDER -Exclude $excludedFiles
-          $distFiles | Copy-Item -Destination $distFolder -Recurse
-          Add-Type -assembly "system.io.compression.filesystem"
-          [io.compression.zipfile]::CreateFromDirectory($distFolder, "$HOME\Desktop\oh-my-posh.zip")
-          $uploadParams = @{
-              Uri         = $uploadUri
-              Method      = 'POST'
-              Headers     = @{
-                  Authorization = $auth
-              }
-              ContentType = 'application/zip'
-              InFile      = "$HOME\Desktop\oh-my-posh.zip"
-          }
-          $result = Invoke-RestMethod @uploadParams
-          Write-Host 'GitHub release completed'
+  - pwsh: >-
+      if ($isWindows) {
+        .\Build\release.ps1
       }
