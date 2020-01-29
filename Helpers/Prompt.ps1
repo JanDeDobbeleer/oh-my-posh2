@@ -163,7 +163,13 @@ function Test-VirtualEnv {
 
 function Get-VirtualEnvName {
     if ($env:VIRTUAL_ENV) {
-        $virtualEnvName = ($env:VIRTUAL_ENV -split '\\')[-1]
+        if ($PSVersionTable.Platform -eq 'Unix') {
+            $virtualEnvName = ($env:VIRTUAL_ENV -split '/')[-1]
+        } elseif ($PSVersionTable.Platform -eq 'Windows') {
+            $virtualEnvName = ($env:VIRTUAL_ENV -split '\\')[-1]
+        } else {
+            $virtualEnvName = $env:VIRTUAL_ENV
+        }
         return $virtualEnvName
     } elseif ($Env:CONDA_PROMPT_MODIFIER) {
         [regex]::Match($Env:CONDA_PROMPT_MODIFIER, "^\((.*)\)").Captures.Groups[1].Value;
