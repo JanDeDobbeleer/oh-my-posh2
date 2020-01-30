@@ -12,16 +12,21 @@ function Write-Theme
 	$user = $s1.CurrentUser
 	$prompt = Write-Prompt -Object "$user " -ForegroundColor $s1.Colors.PromptForegroundColor
 	$prompt += Write-Prompt -Object ":: " -ForegroundColor $s1.Colors.AdminIconForegroundColor
-	$prompt += Write-Prompt -Object "$(Get-FullPath -dir $pwd) " -ForegroundColor $s1.Colors.DriveForegroundColor
 
-	$status = Get-VCSStatus
-	if ($status)
-	{
-		$gitbranchpre = [char]::ConvertFromUtf32(0x003c)
-		$gitbranchpost = [char]::ConvertFromUtf32(0x003e)
+	if ( $s1.PromptControl.DirPrompt ) {
+		$prompt += Write-Prompt -Object "$(Get-FullPath -dir $pwd) " -ForegroundColor $s1.Colors.DriveForegroundColor
+	}
 
-		$gitinfo = get-vcsinfo -status $status
-		$prompt += Write-Prompt -Object "$gitbranchpre$($gitinfo.vcinfo)$gitbranchpost " -ForegroundColor $($gitinfo.backgroundcolor)
+	if ( $s1.PromptControl.GitPrompt ) {
+		$status = Get-VCSStatus
+		if ($status)
+		{
+			$gitbranchpre = [char]::ConvertFromUtf32(0x003c)
+			$gitbranchpost = [char]::ConvertFromUtf32(0x003e)
+
+			$gitinfo = get-vcsinfo -status $status
+			$prompt += Write-Prompt -Object "$gitbranchpre$($gitinfo.vcinfo)$gitbranchpost " -ForegroundColor $($gitinfo.backgroundcolor)
+		}
 	}
 
 	$prompt += Write-Prompt -Object $s1.PromptSymbols.PromptIndicator -ForegroundColor $s1.Colors.AdminIconForegroundColor

@@ -11,15 +11,19 @@ function Write-Theme {
 
     $prompt = Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.PromptForegroundColor
 
-    $dir = Get-FullPath -dir $pwd
+    if ( $sl.PromptControl.DirPrompt ) {
+        $dir = Get-FullPath -dir $pwd
 
-    $prompt += Write-Prompt -Object $dir -ForegroundColor $sl.Colors.PromptForegroundColor
+        $prompt += Write-Prompt -Object $dir -ForegroundColor $sl.Colors.PromptForegroundColor
+    }
 
-    $status = Get-VCSStatus
-    if ($status) {
-        $vcsInfo = Get-VcsInfo -status ($status)
-        $info = $vcsInfo.VcInfo
-        $prompt += Write-Prompt -Object " $info" -ForegroundColor $vcsInfo.BackgroundColor
+    if ( $sl.PromptControl.GitPrompt ) {
+        $status = Get-VCSStatus
+        if ($status) {
+            $vcsInfo = Get-VcsInfo -status ($status)
+            $info = $vcsInfo.VcInfo
+            $prompt += Write-Prompt -Object " $info" -ForegroundColor $vcsInfo.BackgroundColor
+        }
     }
 
     #check for elevated prompt
@@ -44,8 +48,10 @@ function Write-Theme {
     $prompt += Write-Prompt $timeStamp -ForegroundColor $sl.Colors.PromptBackgroundColor
     $prompt += Set-Newline
 
-    if (Test-VirtualEnv) {
-        $prompt += Write-Prompt -Object "$($sl.PromptSymbols.VirtualEnvSymbol) $(Get-VirtualEnvName) " -BackgroundColor $sl.Colors.VirtualEnvBackgroundColor -ForegroundColor $sl.Colors.VirtualEnvForegroundColor
+    if ( $sl.PromptControl.PyEnvPrompt ) {
+        if (Test-VirtualEnv) {
+            $prompt += Write-Prompt -Object "$($sl.PromptSymbols.VirtualEnvSymbol) $(Get-VirtualEnvName) " -BackgroundColor $sl.Colors.VirtualEnvBackgroundColor -ForegroundColor $sl.Colors.VirtualEnvForegroundColor
+        }
     }
 
     if ($with) {

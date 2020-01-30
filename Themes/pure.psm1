@@ -15,25 +15,30 @@ function Write-Theme {
     }
 
     # Writes the drive portion
-    $drive = Get-FullPath -dir $pwd
-    $prompt += Write-Prompt -Object $drive -ForegroundColor $sl.Colors.DriveForegroundColor
+    if ( $sl.PromptControl.DirPrompt ) {
+        $drive = Get-FullPath -dir $pwd
+        $prompt += Write-Prompt -Object $drive -ForegroundColor $sl.Colors.DriveForegroundColor
+        $prompt +=  Write-Prompt -Object ' '
+    }
 
-    $prompt +=  Write-Prompt -Object ' '
-
-    $status = Get-VCSStatus
-    if ($status) {
-        $prompt += Write-Prompt -Object "$($status.Branch)" -ForegroundColor $sl.Colors.WithForegroundColor
-        if ($status.Working.Length -gt 0) {
-            $prompt += Write-Prompt -Object (" " + $sl.PromptSymbols.GitDirtyIndicator) -ForegroundColor $sl.Colors.GitDefaultColor
+    if ( $sl.PromptControl.GitPrompt ) {
+        $status = Get-VCSStatus
+        if ($status) {
+            $prompt += Write-Prompt -Object "$($status.Branch)" -ForegroundColor $sl.Colors.WithForegroundColor
+            if ($status.Working.Length -gt 0) {
+                $prompt += Write-Prompt -Object (" " + $sl.PromptSymbols.GitDirtyIndicator) -ForegroundColor $sl.Colors.GitDefaultColor
+            }
         }
     }
 
     # New line
-    $prompt += Set-Newline
+    if ( $sl.PromptControl.GitPrompt -or $sl.PromptControl.DirPrompt ) {
+        $prompt += Set-Newline
+    }
 
     # Writes the postfixes to the prompt
     $prompt += Write-Prompt -Object ($sl.PromptSymbols.PromptIndicator) -ForegroundColor $promtSymbolColor
-    
+
     $prompt += ' '
     $prompt
 }

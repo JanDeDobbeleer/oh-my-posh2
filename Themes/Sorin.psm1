@@ -24,19 +24,25 @@ function Write-Theme {
     }
 
     # Writes the drive portion
-    $prompt += Write-Prompt -Object "$(Get-ShortPath -dir $pwd) " -ForegroundColor $sl.Colors.DriveForegroundColor
+    if ( $sl.PromptControl.DirPrompt ) {
+        $prompt += Write-Prompt -Object "$(Get-ShortPath -dir $pwd) " -ForegroundColor $sl.Colors.DriveForegroundColor
+    }
 
-    $status = Get-VCSStatus
-    if ($status) {
-        $themeInfo = Get-VcsInfo -status ($status)
-        $prompt += Write-Prompt -Object "git:" -ForegroundColor $sl.Colors.PromptForegroundColor
-        $prompt += Write-Prompt -Object "$($themeInfo.VcInfo) " -ForegroundColor $themeInfo.BackgroundColor
+    if ( $sl.PromptControl.GitPrompt ) {
+        $status = Get-VCSStatus
+        if ($status) {
+            $themeInfo = Get-VcsInfo -status ($status)
+            $prompt += Write-Prompt -Object "git:" -ForegroundColor $sl.Colors.PromptForegroundColor
+            $prompt += Write-Prompt -Object "$($themeInfo.VcInfo) " -ForegroundColor $themeInfo.BackgroundColor
+        }
     }
 
     # write virtualenv
-    if (Test-VirtualEnv) {
-        $prompt += Write-Prompt -Object 'env:' -ForegroundColor $sl.Colors.PromptForegroundColor
-        $prompt += Write-Prompt -Object "$(Get-VirtualEnvName) " -ForegroundColor $themeInfo.VirtualEnvForegroundColor
+    if ( $sl.PromptControl.PyEnvPrompt ) {
+        if (Test-VirtualEnv) {
+            $prompt += Write-Prompt -Object 'env:' -ForegroundColor $sl.Colors.PromptForegroundColor
+            $prompt += Write-Prompt -Object "$(Get-VirtualEnvName) " -ForegroundColor $themeInfo.VirtualEnvForegroundColor
+        }
     }
 
     if ($with) {

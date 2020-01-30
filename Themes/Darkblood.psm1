@@ -15,11 +15,13 @@ function Write-Theme {
 
     # $prompt += "$($sl.PromptSymbols.SegmentForwardSymbol) "
 
-    $status = Get-VCSStatus
-    if ($status) {
-        $vcsInfo = Get-VcsInfo -status ($status)
-        $info = $vcsInfo.VcInfo
-        $prompt += Write-Segment -content $info -foregroundColor $sl.Colors.GitForegroundColor
+    if ( $sl.PromptControl.GitPrompt ) {
+        $status = Get-VCSStatus
+        if ($status) {
+            $vcsInfo = Get-VcsInfo -status ($status)
+            $info = $vcsInfo.VcInfo
+            $prompt += Write-Segment -content $info -foregroundColor $sl.Colors.GitForegroundColor
+        }
     }
 
     #check for elevated prompt
@@ -37,13 +39,19 @@ function Write-Theme {
     # SECOND LINE
     $prompt += Set-Newline
     $prompt += Write-Prompt -Object ([char]::ConvertFromUtf32(0x2514)) -ForegroundColor $sl.Colors.PromptSymbolColor
-    $path += Get-FullPath -dir $pwd
-    $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentBackwardSymbol -ForegroundColor $sl.Colors.PromptSymbolColor
-    $prompt += Write-Prompt -Object $path -ForegroundColor $sl.Colors.PromptForegroundColor
+    if ( $sl.PromptControl.DirPrompt ) {
+        $path += Get-FullPath -dir $pwd
+        $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentBackwardSymbol -ForegroundColor $sl.Colors.PromptSymbolColor
+        $prompt += Write-Prompt -Object $path -ForegroundColor $sl.Colors.PromptForegroundColor
+        $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $sl.Colors.PromptSymbolColor
+    }
 
-    if (Test-VirtualEnv) {
-        $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) $($sl.PromptSymbols.SegmentBackwardSymbol)" -ForegroundColor $sl.Colors.PromptSymbolColor
-        $prompt += Write-Prompt -Object "$($sl.PromptSymbols.VirtualEnvSymbol) $(Get-VirtualEnvName)" -ForegroundColor $sl.Colors.VirtualEnvForegroundColor
+    if ( $sl.PromptControl.PyEnvPrompt ) {
+        if (Test-VirtualEnv) {
+            $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentBackwardSymbol)" -ForegroundColor $sl.Colors.PromptSymbolColor
+            $prompt += Write-Prompt -Object "$($sl.PromptSymbols.VirtualEnvSymbol) $(Get-VirtualEnvName)" -ForegroundColor $sl.Colors.VirtualEnvForegroundColor
+            $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol)" -ForegroundColor $sl.Colors.PromptSymbolColor
+        }
     }
 
     if ($with) {
@@ -51,7 +59,7 @@ function Write-Theme {
         $prompt += Write-Prompt -Object "$($with.ToUpper())" -ForegroundColor $sl.Colors.WithForegroundColor
     }
 
-    $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol)$($sl.PromptSymbols.PromptIndicator)" -ForegroundColor $sl.Colors.PromptSymbolColor
+    $prompt += Write-Prompt -Object "$($sl.PromptSymbols.PromptIndicator)" -ForegroundColor $sl.Colors.PromptSymbolColor
     $prompt += ' '
     $prompt
 }

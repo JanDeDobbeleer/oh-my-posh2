@@ -18,28 +18,34 @@ function Write-Theme {
         $device = Get-ComputerName
         $prompt += Write-Prompt -Object " at" -ForegroundColor $sl.Colors.PromptForegroundColor
         $prompt += Write-Prompt -Object " $device" -ForegroundColor $sl.Colors.GitDefaultColor
-        # write in for folder
-        $prompt += Write-Prompt -Object " in" -ForegroundColor $sl.Colors.PromptForegroundColor
     }
     # write folder
-    $dir = Get-FullPath -dir $pwd
-    $prompt += Write-Prompt -Object " $dir " -ForegroundColor $sl.Colors.AdminIconForegroundColor
+    if ( $sl.PromptControl.DirPrompt ) {
+        # write in for folder
+        $prompt += Write-Prompt -Object " in" -ForegroundColor $sl.Colors.PromptForegroundColor
+        $dir = Get-FullPath -dir $pwd
+        $prompt += Write-Prompt -Object " $dir" -ForegroundColor $sl.Colors.AdminIconForegroundColor
+    }
     # write on (git:branchname status)
-    $status = Get-VCSStatus
-    if ($status) {
-        $sl.GitSymbols.BranchSymbol = ''
-        $themeInfo = Get-VcsInfo -status ($status)
-        $prompt += Write-Prompt -Object 'on git:' -ForegroundColor $sl.Colors.PromptForegroundColor
-        $prompt += Write-Prompt -Object "$($themeInfo.VcInfo) " -ForegroundColor $themeInfo.BackgroundColor
+    if ( $sl.PromptControl.GitPrompt ) {
+        $status = Get-VCSStatus
+        if ($status) {
+            $sl.GitSymbols.BranchSymbol = ''
+            $themeInfo = Get-VcsInfo -status ($status)
+            $prompt += Write-Prompt -Object ' on git:' -ForegroundColor $sl.Colors.PromptForegroundColor
+            $prompt += Write-Prompt -Object "$($themeInfo.VcInfo)" -ForegroundColor $themeInfo.BackgroundColor
+        }
     }
     # write virtualenv
-    if (Test-VirtualEnv) {
-        $prompt += Write-Prompt -Object 'inside env:' -ForegroundColor $sl.Colors.PromptForegroundColor
-        $prompt += Write-Prompt -Object "$(Get-VirtualEnvName) " -ForegroundColor $themeInfo.VirtualEnvForegroundColor
+    if ( $sl.PromptControl.PyEnvPrompt ) {
+        if (Test-VirtualEnv) {
+            $prompt += Write-Prompt -Object ' inside env:' -ForegroundColor $sl.Colors.PromptForegroundColor
+            $prompt += Write-Prompt -Object "$(Get-VirtualEnvName)" -ForegroundColor $themeInfo.VirtualEnvForegroundColor
+        }
     }
     # write [time]
     $timeStamp = Get-Date -Format T
-    $prompt += Write-Prompt "[$timeStamp]" -ForegroundColor $sl.Colors.PromptForegroundColor
+    $prompt += Write-Prompt " [$timeStamp]" -ForegroundColor $sl.Colors.PromptForegroundColor
     # check for elevated prompt
     If (Test-Administrator) {
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.ElevatedSymbol) " -ForegroundColor $sl.Colors.AdminIconForegroundColor

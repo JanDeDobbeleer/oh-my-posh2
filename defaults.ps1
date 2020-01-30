@@ -71,6 +71,12 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         ConsoleTitle = $true
         OriginSymbols = $false
     }
+    PromptControl = @{
+        KubePrompt  = $true
+        PyEnvPrompt = $true
+        DirPrompt   = $true
+        GitPrompt   = $true
+    }
 }
 
 # PSColor default settings

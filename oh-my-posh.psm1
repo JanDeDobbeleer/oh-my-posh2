@@ -39,6 +39,28 @@ function Set-Prompt {
     Set-Item -Path Function:prompt -Value $Prompt -Force
 }
 
+function Switch-Prompt {
+    param (
+        [Parameter(Mandatory=$true,
+                   Position=0)]
+        [ValidateSet('Kube','PyEnv','Dir','Git')]
+        [string]
+        $Prompt
+        ,
+        [Parameter(Mandatory=$false)]
+        [switch]
+        $On
+    )
+
+    switch ( $Prompt )
+    {
+        "Kube"  { $sl.PromptControl.KubePrompt = -not $sl.PromptControl.KubePrompt }
+        "PyEnv" { $sl.PromptControl.PyEnvPrompt = -not $sl.PromptControl.PyEnvPrompt }
+        "Dir"   { $sl.PromptControl.DirPrompt = -not $sl.PromptControl.DirPrompt }
+        "Git"   { $sl.PromptControl.GitPrompt = -not $sl.PromptControl.GitPrompt }
+    }
+}
+
 function global:Write-WithPrompt() {
     param(
         [string]

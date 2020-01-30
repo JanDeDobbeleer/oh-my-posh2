@@ -17,9 +17,11 @@ function Write-Theme {
     }
 
     # git info
-    If ($vcsStatus = Get-VCSStatus) {
-        $vcsInfo = Get-VcsInfo -status ($vcsStatus)
-        $sVcs = "$($vcsInfo.VcInfo) "
+    if ( $sl.PromptControl.GitPrompt ) {
+        If ($vcsStatus = Get-VCSStatus) {
+            $vcsInfo = Get-VcsInfo -status ($vcsStatus)
+            $sVcs = "$($vcsInfo.VcInfo) "
+        }
     }
 
     # timestamp
@@ -31,8 +33,10 @@ function Write-Theme {
     }
 
     # virtualenv
-    If (Test-VirtualEnv) {
-        $sVenv = " $(Get-VirtualEnvName)"
+    if ( $sl.PromptControl.PyEnvPrompt ) {
+        If (Test-VirtualEnv) {
+            $sVenv = " $(Get-VirtualEnvName)"
+        }
     }
 
     # with
@@ -45,15 +49,21 @@ function Write-Theme {
 
     $prompt += Write-Prompt -Object $sFailed -ForegroundColor $sl.Colors.CommandFailedIconForegroundColor
     $prompt += Write-Prompt -Object $sWith   -ForegroundColor $sl.Colors.WithForegroundColor
-    $prompt += Write-Prompt -Object $sVenv   -ForegroundColor $sl.Colors.VirtualEnvForegroundColor
+    if ( $sl.PromptControl.PyEnvPrompt ) {
+        $prompt += Write-Prompt -Object $sVenv   -ForegroundColor $sl.Colors.VirtualEnvForegroundColor
+    }
     $prompt += Write-Prompt -Object $sAdmin  -ForegroundColor $sl.Colors.AdminIconForegroundColor
     $prompt += Write-Prompt -Object $sTime   -ForegroundColor $sl.colors.TimestampForegroundColor
     $prompt += Write-Prompt -Object "`r"
-    $prompt += Write-Prompt -Object $sPath   -ForegroundColor $sl.Colors.DriveForegroundColor
-    $prompt += Write-Prompt -Object $sVcs    -ForegroundColor $vcsInfo.BackgroundColor
+    if ( $sl.PromptControl.DirPrompt ) {
+        $prompt += Write-Prompt -Object $sPath   -ForegroundColor $sl.Colors.DriveForegroundColor
+    }
+    if ( $sl.PromptControl.GitPrompt ) {
+        $prompt += Write-Prompt -Object $sVcs    -ForegroundColor $vcsInfo.BackgroundColor
+    }
 
-    If ($sl.DoubleCommandLine) { 
-        $prompt += Set-Newline 
+    If ($sl.DoubleCommandLine) {
+        $prompt += Set-Newline
     }
 
     # Writes the postfixes to the prompt
