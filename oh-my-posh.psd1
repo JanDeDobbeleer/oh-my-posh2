@@ -63,7 +63,8 @@ FunctionsToExport = @('Show-Colors',
                       'Test-Administrator',
                       'Get-ComputerName',
                       'Set-Newline',
-                      'Get-ThemesLocation')
+                      'Get-ThemesLocation'
+                      'Set-Prompt')
 
 # Private data to pass to the module specified in RootModule. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{

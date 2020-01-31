@@ -46,6 +46,7 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         VirtualEnvSymbol               = [char]::ConvertFromUtf32(0xE606)
         HomeSymbol                     = '~'
         RootSymbol                     = '#'
+        UNCSymbol                      = '§'
     }
     Colors               = @{
         GitDefaultColor                         = [ConsoleColor]::DarkGreen

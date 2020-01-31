@@ -14,6 +14,8 @@ $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
         SegmentSeparatorBackwardSymbol = '<'
         PathSeparator                  = '\'
         HomeSymbol                     = '*'
+        RootSymbol                     = '#'
+        UNCSymbol                      = '§'
     }
 }
 
@@ -32,7 +34,7 @@ function New-MockPath {
         [Parameter(Mandatory = $false)]
         [System.String]
         $DriveName
-        )
+    )
     
     $provider = New-MockObject -Type System.Management.Automation.ProviderInfo 
     $path = New-MockObject -Type System.Management.Automation.PathInfo 
@@ -118,8 +120,8 @@ Describe "Get-Provider" {
 Describe "Get-FormattedRootLocation" {
     Context "Running in the FileSystem" {
         BeforeAll { 
-            Mock Get-Home {return 'C:\Users\Jan'} 
-            Mock Test-Windows {return $true}
+            Mock Get-Home { return 'C:\Users\Jan' } 
+            Mock Test-Windows { return $true }
         }
         It "is in the $HOME folder" {
             $path = New-MockPath -Location 'C:\Users\Jan' -ProviderName 'FileSystem' -DriveName 'C'
@@ -131,15 +133,15 @@ Describe "Get-FormattedRootLocation" {
         }
         It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' with Drive X:" {
             $path = New-MockPath -Location 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' -ProviderName 'FileSystem' -DriveName 'X'
-            Get-FormattedRootLocation $path | Should Be ''
+            Get-FormattedRootLocation $path | Should Be $ThemeSettings.PromptSymbols.UNCSymbol
         }
         It "is in C:" {
             $path = New-MockPath -Location 'C:\Documents' -ProviderName 'FileSystem' -DriveName 'C'
-            Get-FormattedRootLocation $path | Should Be 'C:'
+            Get-FormattedRootLocation $path | Should Be ''
         }
         It "is has no drive" {
             $path = New-MockPath -Location 'J:\Test\Folder\Somewhere' -ProviderName 'FileSystem' -DriveName 'J'
-            Get-FormattedRootLocation $path | Should Be 'J:'
+            Get-FormattedRootLocation $path | Should Be ''
         }
         It "is has no valid path" {
             if (Test-PsCore) {
@@ -161,7 +163,7 @@ Describe "Get-FormattedRootLocation" {
 
 Describe "Get-FullPath" {
     Context "Running in the FileSystem" {
-        BeforeAll { Mock Get-Home {return 'C:\Users\Jan'} }
+        BeforeAll { Mock Get-Home { return 'C:\Users\Jan' } }
         It "is in the $HOME folder" {
             $path = New-MockPath -Location 'C:\Users\Jan' -ProviderName 'FileSystem' -DriveName 'C'
             Get-FullPath $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
@@ -174,26 +176,56 @@ Describe "Get-FullPath" {
 }
 
 Describe "Get-ShortPath" {
-    Context "Running in the FileSystem" {
-        BeforeAll { 
-            Mock Get-Home {return 'C:\Users\Jan'}
-            Mock Get-OSPathSeparator {return '\'}
+    if (Test-Windows) {
+        Context "Running in the FileSystem on Windows" {
+            BeforeAll {
+                Mock Get-Home { return 'C:\Users\Jan' }
+                Mock Get-OSPathSeparator { return '\' }
+            }
+            It "is in a root folder" {
+                $path = New-MockPath -Location 'C:\Users\' -ProviderName 'FileSystem' -DriveName 'C'
+                Get-ShortPath $path | Should Be "C:$($ThemeSettings.PromptSymbols.PathSeparator)Users"
+            }
+            It "is outside the $HOME folder" {
+                $path = New-MockPath -Location 'C:\Tools\Something' -ProviderName 'FileSystem' -DriveName 'C'
+                Get-ShortPath $path | Should Be "C:$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Something"
+            }
+            It "is in the $HOME folder" {
+                $path = New-MockPath -Location 'C:\Users\Jan\' -ProviderName 'FileSystem' -DriveName 'C'
+                Get-ShortPath $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
+            }
+            It "is somewhere in the $HOME folder" {
+                $path = New-MockPath -Location 'C:\Users\Jan\Git\Somewhere' -ProviderName 'FileSystem' -DriveName 'C'
+                Get-ShortPath $path | Should Be "$($ThemeSettings.PromptSymbols.HomeSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Somewhere"
+            }
+            It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello'" {
+                $path = New-MockPath -Location 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' -ProviderName 'FileSystem' -DriveName 'Microsoft.PowerShell.Core'
+                Get-ShortPath $path | Should Be "$($ThemeSettings.PromptSymbols.UNCSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Hello"
+            }
         }
-        It "is in a root folder" {
-            $path = New-MockPath -Location '\Users\' -ProviderName 'FileSystem' -DriveName 'C'
-            Get-ShortPath $path | Should Be 'Users'
-        }
-        It "is in the $HOME folder" {
-            $path = New-MockPath -Location 'C:\Users\Jan\' -ProviderName 'FileSystem' -DriveName 'C'
-            Get-ShortPath $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
-        }
-        It "is somewhere in the $HOME folder" {
-            $path = New-MockPath -Location 'C:\Users\Jan\Git\Somewhere' -ProviderName 'FileSystem' -DriveName 'C'
-            Get-ShortPath $path | Should Be "$($ThemeSettings.PromptSymbols.HomeSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Somewhere"
-        }
-        It "is in 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello'" {
-            $path = New-MockPath -Location 'Microsoft.PowerShell.Core\FileSystem::\\Test\Hello' -ProviderName 'FileSystem' -DriveName 'Microsoft.PowerShell.Core'
-            Get-ShortPath $path | Should Be "$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Hello"
+    }
+    if (-Not (Test-Windows)) {
+        Context "Running on the filesystem in UNIX" {
+            BeforeAll { 
+                Mock Get-Home { return '/Users/Jan' }
+                Mock Get-OSPathSeparator { return '/' }
+            }
+            It "is outside the $HOME folder" {
+                $path = New-MockPath -Location 'C:/Tools/Something' -ProviderName 'FileSystem' -DriveName 'C'
+                Get-ShortPath $path | Should Be "C:$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Something"
+            }
+            It "is in a root folder" {
+                $path = New-MockPath -Location '/Users/' -ProviderName 'FileSystem' -DriveName '/'
+                Get-ShortPath $path | Should Be 'Users'
+            }
+            It "is in the $HOME folder" {
+                $path = New-MockPath -Location '/Users/Jan/' -ProviderName 'FileSystem' -DriveName '/'
+                Get-ShortPath $path | Should Be $ThemeSettings.PromptSymbols.HomeSymbol
+            }
+            It "is somewhere in the $HOME folder" {
+                $path = New-MockPath -Location '/Users/Jan/Git/Somewhere' -ProviderName 'FileSystem' -DriveName '/'
+                Get-ShortPath $path | Should Be "$($ThemeSettings.PromptSymbols.HomeSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)$($ThemeSettings.PromptSymbols.TruncatedFolderSymbol)$($ThemeSettings.PromptSymbols.PathSeparator)Somewhere"
+            }
         }
     }
 }

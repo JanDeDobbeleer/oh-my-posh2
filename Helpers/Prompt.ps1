@@ -76,23 +76,10 @@ function Get-FormattedRootLocation {
         if ($dir.Path.StartsWith($homedir)) {
             return $sl.PromptSymbols.HomeSymbol
         }
-        elseif ($dir.Path.StartsWith('Microsoft.PowerShell.Core')) {
-            return ''
+        if ($dir.Path.StartsWith('Microsoft.PowerShell.Core')) {
+            return $sl.PromptSymbols.UNCSymbol
         }
-        elseif (Test-Windows) {
-            $root = $dir.Drive.Name
-            if ($root) {
-                return $root + ':'
-            }
-            return $dir.Path.Split(':\')[0] + ':'
-        }
-        else {
-            $rootLocation = $dir.Path.Split((Get-OSPathSeparator))[1]
-            if ($rootLocation -ne '') {
-                return $rootLocation
-            }
-            return $sl.PromptSymbols.RootSymbol
-        }
+        return ''
     }
     else {
         return $dir.Drive.Name
@@ -143,7 +130,7 @@ function Get-ShortPath {
         $result = @()
         while ($path -And -Not ($knownPaths.Contains($path))) {
             $folder = $path.Split((Get-OSPathSeparator))[-1]
-            if ( (Test-IsVCSRoot -Path $path) -Or ($result.length -eq 0) ) {
+            if ( (Test-IsVCSRoot -Path $path) -Or ($result.length -eq 0) -Or -Not ($path.Contains((Get-OSPathSeparator)))) {
                 $result = , $folder + $result
             }
             else {
@@ -154,10 +141,13 @@ function Get-ShortPath {
         }
         $shortPath = $result -join $sl.PromptSymbols.PathSeparator
         $rootLocation = (Get-FormattedRootLocation -dir $dir)
-        if ($shortPath -And $shortPath -ne $rootLocation) {
+        if ($rootLocation -and $shortPath) {
             return "$rootLocation$($sl.PromptSymbols.PathSeparator)$shortPath"
         }
-        return $rootLocation
+        if ($rootLocation) {
+            return $rootLocation
+        }
+        return $shortPath
     }
     else {
         return $dir.path.Replace((Get-FormattedRootLocation -dir $dir), '')
