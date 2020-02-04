@@ -46,13 +46,13 @@ Features:
 
 You should use ConEmu to have a brilliant terminal experience on Windows. You can install it using [Chocolatey][chocolatey]:
 
-```bash
+```powershell
 choco install ConEmu
 ```
 
 You can also install it using [Scoop][scoop] via the [extras bucket][scoop-extras]:
 
-```bash
+```powershell
 $ scoop search conemu
 'extras' bucket:
   conemu (18.xx.xx)
@@ -90,14 +90,14 @@ In case you're running this on PS Core, make sure to also install version 2.0.0-
 
 To enable the engine edit your PowerShell profile:
 
-```bash
+```powershell
 if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
 notepad $PROFILE
 ```
 
 Append the following lines to your PowerShell profile:
 
-```bash
+```powershell
 Import-Module posh-git
 Import-Module oh-my-posh
 Set-Theme Paradox
@@ -109,7 +109,7 @@ The last command sets the theme for the console. Check the available themes list
 
 List the current configuration:
 
-```bash
+```powershell
 $ThemeSettings
 ```
 
@@ -118,19 +118,19 @@ $ThemeSettings
 You can tweak the settings by manipulating `$ThemeSettings`.
 This example allows you to tweak the branch symbol using a unicode character:
 
-````bash
+````powershell
 $ThemeSettings.GitSymbols.BranchSymbol = [char]::ConvertFromUtf32(0xE0A0)
 ````
 
 Also do not forget the Posh-Git settings itself (enable the stash indication for example):
 
-```bash
+```powershell
 $GitPromptSettings
 ```
 
 Hide your `username@domain` when not in a virtual machine for the Agnoster, Fish, Honukai, Paradox and Sorin themes:
 
-```bash
+```powershell
 $DefaultUser = 'yourUsernameHere'
 ```
 
@@ -138,7 +138,7 @@ $DefaultUser = 'yourUsernameHere'
 
 `Set-Theme`:  set a theme from the Themes directory. If no match is found, it will not be changed. Autocomplete is available to list and complete available themes.
 
-```bash
+```powershell
 Set-Theme paradox
 ```
 
@@ -190,7 +190,7 @@ If you want to create a theme it can be done rather easily by adding a `mytheme.
 
 The only required function is `Write-Theme`. You can use the following template to get started:
 
-````bash
+````powershell
 #requires -Version 2 -Modules posh-git
 
 function Write-Theme
@@ -212,13 +212,27 @@ Feel free to use the public helper functions `Get-VCSStatus`, `Get-VcsInfo`, `Ge
 
 To test the output in ConEmu, just switch to your theme:
 
-```bash
+```powershell
 Set-Theme mytheme
 ```
 
 If you want to include your theme in oh-my-posh, send me a PR and I'll try to give feedback ASAP.
 
 Happy theming!
+
+### Adding stack count to a custom theme
+
+As it seems getting access to the stack information when using pushd/popd is sort of mission impossible from within a theme, you can use a workaround proposed by [Jonathan Leech-Pepin][jleechpe]. In your `$PROFILE`, add a variable that will act as a correctly scoped pointer to fetch the stack context:
+
+```powershell
+$getStackContext = {Get-Location -Stack}
+```
+
+Next, in your custom theme, access the information you want to display:
+
+```powershell
+$stackCount = (&$getStackContext).count
+```
 
 ### Based on work by
 
@@ -247,6 +261,7 @@ Happy theming!
 [scoop-extras]: https://github.com/lukesampson/scoop/wiki/Buckets
 [chrisbenti-psconfig]: https://github.com/chrisbenti/PS-Config
 [keithdahlby-poshgit]: https://github.com/dahlbyk/posh-git
+[jleechpe]: https://github.com/jleechpe
 [oh-my-zsh]: https://github.com/robbyrussell/oh-my-zsh
 [blog]: https://blog.itdepends.be/shell-shock/
 [chocolatey]: https://chocolatey.org/
