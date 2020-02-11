@@ -167,7 +167,7 @@ function Get-VirtualEnvName {
     if ($env:VIRTUAL_ENV) {
         if ($PSVersionTable.Platform -eq 'Unix') {
             $virtualEnvName = ($env:VIRTUAL_ENV -split '/')[-1]
-        } elseif ($PSVersionTable.Platform -eq 'Windows') {
+        } elseif ($PSVersionTable.Platform -eq 'Win32NT' -or $PSEdition -eq 'Desktop') {
             $virtualEnvName = ($env:VIRTUAL_ENV -split '\\')[-1]
         } else {
             $virtualEnvName = $env:VIRTUAL_ENV
