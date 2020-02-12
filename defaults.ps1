@@ -9,6 +9,7 @@ function Get-ThemesLocation {
 
 $global:ThemeSettings = New-Object -TypeName PSObject -Property @{
     CurrentUser          = [System.Environment]::UserName
+    CurrentHostname      = [System.Environment]::MachineName
     CurrentThemeLocation = "$PSScriptRoot\Themes\Agnoster.psm1"
     MyThemesLocation     = Get-ThemesLocation
     ErrorCount           = 0
