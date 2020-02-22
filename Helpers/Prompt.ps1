@@ -172,7 +172,7 @@ function Get-VirtualEnvName {
         } else {
             $virtualEnvName = $env:VIRTUAL_ENV
         }
-        return $virtualEnvName
+        return $virtualEnvName.Trim('[\/]')
     }
     elseif ($Env:CONDA_PROMPT_MODIFIER) {
         [regex]::Match($Env:CONDA_PROMPT_MODIFIER, "^\((.*)\)").Captures.Groups[1].Value;
