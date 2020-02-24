@@ -46,7 +46,8 @@ function Get-GitRemoteUrl($upstream) {
 function Get-VcsInfo {
     param(
         [Object]
-        $status
+        $status,
+        [Parameter(Mandatory=$false)][Int] $branchNameMaxLength
     )
 
     if ($status) {
@@ -103,7 +104,12 @@ function Get-VcsInfo {
             $branchStatusSymbol = '?'
         }
 
-        $vcInfo = $vcInfo +  (Format-BranchName -branchName ($status.Branch))
+        $branchName = $status.Branch
+        if ($branchNameMaxLength -and $branchName.Length -gt $branchNameMaxLength) {
+            $branchName = $branchName.Substring(0, $branchNameMaxLength);
+        }
+
+        $vcInfo = $vcInfo +  (Format-BranchName -branchName $branchName)
 
         if ($branchStatusSymbol) {
             $vcInfo = $vcInfo +  ('{0} ' -f $branchStatusSymbol)
