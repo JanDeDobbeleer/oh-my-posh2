@@ -52,8 +52,8 @@ function Write-Theme {
     $prompt += Write-Prompt -Object $sPath   -ForegroundColor $sl.Colors.DriveForegroundColor
     $prompt += Write-Prompt -Object $sVcs    -ForegroundColor $vcsInfo.BackgroundColor
 
-    If ($sl.DoubleCommandLine) { 
-        $prompt += Set-Newline 
+    If ($sl.DoubleCommandLine) {
+        $prompt += Set-Newline
     }
 
     # Writes the postfixes to the prompt

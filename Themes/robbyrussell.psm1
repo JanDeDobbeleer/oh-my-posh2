@@ -33,7 +33,7 @@ function Write-Theme {
             $prompt += Write-Prompt -Object (" " + $sl.PromptSymbols.GitDirtyIndicator) -ForegroundColor $sl.Colors.GitDefaultColor
         }
     }
-    
+
     $prompt += ' '
     $prompt
 }
@@ -45,4 +45,4 @@ $sl.Colors.PromptHighlightColor = [ConsoleColor]::Blue
 $sl.Colors.DriveForegroundColor = [ConsoleColor]::Cyan
 $sl.Colors.WithForegroundColor = [ConsoleColor]::Red
 $sl.PromptSymbols.GitDirtyIndicator = [char]::ConvertFromUtf32(10007)
-$sl.Colors.GitDefaultColor =[ConsoleColor]::Yellow
+$sl.Colors.GitDefaultColor = [ConsoleColor]::Yellow

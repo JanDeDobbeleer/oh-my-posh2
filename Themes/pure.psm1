@@ -18,7 +18,7 @@ function Write-Theme {
     $drive = Get-FullPath -dir $pwd
     $prompt += Write-Prompt -Object $drive -ForegroundColor $sl.Colors.DriveForegroundColor
 
-    $prompt +=  Write-Prompt -Object ' '
+    $prompt += Write-Prompt -Object ' '
 
     $status = Get-VCSStatus
     if ($status) {
@@ -33,7 +33,7 @@ function Write-Theme {
 
     # Writes the postfixes to the prompt
     $prompt += Write-Prompt -Object ($sl.PromptSymbols.PromptIndicator) -ForegroundColor $promtSymbolColor
-    
+
     $prompt += ' '
     $prompt
 }
@@ -45,4 +45,4 @@ $sl.Colors.PromptHighlightColor = [ConsoleColor]::Blue
 $sl.Colors.DriveForegroundColor = [ConsoleColor]::Cyan
 $sl.Colors.WithForegroundColor = [ConsoleColor]::Red
 $sl.PromptSymbols.GitDirtyIndicator = [char]::ConvertFromUtf32(10007)
-$sl.Colors.GitDefaultColor =[ConsoleColor]::Yellow
+$sl.Colors.GitDefaultColor = [ConsoleColor]::Yellow
