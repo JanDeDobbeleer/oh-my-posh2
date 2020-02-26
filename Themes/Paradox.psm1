@@ -22,7 +22,7 @@ function Write-Theme {
     }
 
     $user = $sl.CurrentUser
-    $computer = [System.Environment]::MachineName
+    $computer = $sl.CurrentHostname
     $path = Get-FullPath -dir $pwd
     if (Test-NotDefaultUser($user)) {
         $prompt += Write-Prompt -Object "$user@$computer " -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
