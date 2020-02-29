@@ -7,12 +7,9 @@ function Write-Theme {
         [string]
         $with
     )
-    $rarrow = $sl.PromptSymbols.SegmentBackwardSymbol
-    $subrarrow = $sl.PromptSymbols.SegmentSubBackwardSymbol
     $adminsymbol = $sl.PromptSymbols.ElevatedSymbol
     $venvsymbol = $sl.PromptSymbols.VirtualEnvSymbol
     $clocksymbol = $sl.PromptSymbols.ClockSymbol
-
 
     ## Left Part
     $prompt = Write-Prompt -Object " $($sl.PromptSymbols.StartSymbol) " -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
@@ -37,35 +34,32 @@ function Write-Theme {
     $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $sl.Colors.SessionInfoBackgroundColor
     ###
 
-
     ## Right Part
     $rightElements = New-Object 'System.Collections.Generic.List[Tuple[string,ConsoleColor]]'
     $login = $sl.CurrentUser
     $computer = [System.Environment]::MachineName;
 
     # List of all right elements
-    $rightElements.Add([System.Tuple]::Create("$rarrow", $sl.Colors.SessionInfoBackgroundColor))
     if (Test-VirtualEnv) {
         $rightElements.Add([System.Tuple]::Create(" $(Get-VirtualEnvName) $venvsymbol ", $sl.Colors.VirtualEnvForegroundColor))
-        $rightElements.Add([System.Tuple]::Create("$subrarrow", $sl.Colors.PromptForegroundColor))
+        $rightElements.Add([System.Tuple]::Create($sl.PromptSymbols.SegmentSubBackwardSymbol, $sl.Colors.PromptForegroundColor))
     }
     if (Test-Administrator) {
         $rightElements.Add([System.Tuple]::Create(" $adminsymbol ", $sl.Colors.AdminIconForegroundColor))
     }
     $rightElements.Add([System.Tuple]::Create(" $login@$computer ", $sl.Colors.UserForegroundColor))
-    $rightElements.Add([System.Tuple]::Create("$subrarrow", $sl.Colors.PromptForegroundColor))
+    $rightElements.Add([System.Tuple]::Create($sl.PromptSymbols.SegmentSubBackwardSymbol, $sl.Colors.PromptForegroundColor))
     $rightElements.Add([System.Tuple]::Create(" $(Get-Date -Format HH:mm:ss) $clocksymbol ", $sl.Colors.TimestampForegroundColor))
     $lengthList = [Linq.Enumerable]::Select($rightElements, [Func[Tuple[string, ConsoleColor], int]] { $args[0].Item1.Length })
     $total = [Linq.Enumerable]::Sum($lengthList)
     # Transform into total length
     $prompt += Set-CursorForRightBlockWrite -textLength $total
     # The line head needs special care and is always drawn
-    $prompt += Write-Prompt -Object $rightElements[0].Item1 -ForegroundColor $sl.Colors.SessionInfoBackgroundColor
-    for ($i = 1; $i -lt $rightElements.Count; $i++) {
+    $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentBackwardSymbol -ForegroundColor $sl.Colors.SessionInfoBackgroundColor
+    for ($i = 0; $i -lt $rightElements.Count; $i++) {
         $prompt += Write-Prompt -Object $rightElements[$i].Item1 -ForegroundColor $rightElements[$i].Item2 -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
     }
     ###
-
 
     $prompt += Write-Prompt -Object "`r"
     $prompt += Set-Newline
