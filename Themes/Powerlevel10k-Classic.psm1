@@ -39,13 +39,14 @@ function Write-Theme {
     $login = $sl.CurrentUser
     $computer = [System.Environment]::MachineName;
 
+    $rightElements.Add([System.Tuple]::Create($sl.PromptSymbols.SegmentBackwardSymbol, $sl.Colors.SessionInfoBackgroundColor))
     # List of all right elements
     if (Test-VirtualEnv) {
         $rightElements.Add([System.Tuple]::Create(" $(Get-VirtualEnvName) $venvsymbol ", $sl.Colors.VirtualEnvForegroundColor))
         $rightElements.Add([System.Tuple]::Create($sl.PromptSymbols.SegmentSubBackwardSymbol, $sl.Colors.PromptForegroundColor))
     }
     if (Test-Administrator) {
-        $rightElements.Add([System.Tuple]::Create(" $adminsymbol ", $sl.Colors.AdminIconForegroundColor))
+        $rightElements.Add([System.Tuple]::Create("  $adminsymbol", $sl.Colors.AdminIconForegroundColor))
     }
     $rightElements.Add([System.Tuple]::Create(" $login@$computer ", $sl.Colors.UserForegroundColor))
     $rightElements.Add([System.Tuple]::Create($sl.PromptSymbols.SegmentSubBackwardSymbol, $sl.Colors.PromptForegroundColor))
@@ -55,8 +56,8 @@ function Write-Theme {
     # Transform into total length
     $prompt += Set-CursorForRightBlockWrite -textLength $total
     # The line head needs special care and is always drawn
-    $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentBackwardSymbol -ForegroundColor $sl.Colors.SessionInfoBackgroundColor
-    for ($i = 0; $i -lt $rightElements.Count; $i++) {
+    $prompt += Write-Prompt -Object $rightElements[0].Item1 -ForegroundColor $sl.Colors.SessionInfoBackgroundColor
+    for ($i = 1; $i -lt $rightElements.Count; $i++) {
         $prompt += Write-Prompt -Object $rightElements[$i].Item1 -ForegroundColor $rightElements[$i].Item2 -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
     }
     ###
