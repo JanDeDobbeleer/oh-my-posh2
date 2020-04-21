@@ -12,11 +12,14 @@ function Write-Theme {
     $sPath = "$(Get-FullPath -dir $pwd) "
 
     # check for elevated prompt
+    $sAdmin = ""
     If (Test-Administrator) {
         $sAdmin = " $($sl.PromptSymbols.ElevatedSymbol)"
     }
 
     # git info
+    $sVcs = ""
+    #$vcsInfo = $sl.Colors.DriveForegroundColor
     If ($vcsStatus = Get-VCSStatus) {
         $vcsInfo = Get-VcsInfo -status ($vcsStatus)
         $sVcs = "$($vcsInfo.VcInfo) "
@@ -26,16 +29,19 @@ function Write-Theme {
     $sTime = " $(Get-Date -Format HH:mm:ss)"
 
     # check the last command state and indicate if failed
+    $sFailed = ""
     If ($lastCommandFailed) {
         $sFailed = " $($sl.PromptSymbols.FailedCommandSymbol)"
     }
 
     # virtualenv
+    $sVenv = ""
     If (Test-VirtualEnv) {
         $sVenv = " $(Get-VirtualEnvName)"
     }
 
     # with
+    $sWith = ""
     If ($with) {
         $sWith = " $($with.ToUpper())"
     }
@@ -71,4 +77,4 @@ $sl.Colors.PromptHighlightColor = [ConsoleColor]::DarkBlue
 $sl.Colors.WithForegroundColor = [ConsoleColor]::DarkRed
 $sl.Colors.VirtualEnvForegroundColor = [System.ConsoleColor]::Magenta
 $sl.Colors.TimestampForegroundColor = [ConsoleColor]::DarkCyan
-$sl | Add-Member -NotePropertyName DoubleCommandLine -NotePropertyValue 0
+$sl | Add-Member -NotePropertyName DoubleCommandLine -NotePropertyValue 0 -Force

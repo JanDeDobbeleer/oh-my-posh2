@@ -67,7 +67,7 @@ function Show-ThemeColors {
     #
     ##############################
     Write-Host -Object ''
-    $sl.Colors.Keys | Sort-Object | ForEach-Object { Write-ColorPreview -text ("{0,-40}" -f $_ ) -color $sl.Colors[$_] }
+    $sl.Colors.Keys | Sort-Object | ForEach-Object { Write-ColorPreview -text $_ -color $sl.Colors[$_] }
     Write-Host -Object ''
 }
 
@@ -98,13 +98,14 @@ function Write-ColorPreview {
         $color
     )
 
-    Write-Host -Object $text -NoNewline
-    Write-Host -Object (" {0,-15}" -f $color ) -BackgroundColor $color
+    $display  = Write-Prompt -Object (" {0,-40}" -f $text)
+    $display += Write-Prompt -Object (" {0,-40}" -f $color.ToString()) -BackgroundColor $color
+    Write-Host $display
 }
 
 function Show-Colors {
     foreach ($color in [enum]::GetValues([ConsoleColor])) {
-        Write-ColorPreview -text "" -color $color
+        Write-ColorPreview -text $color -color $color
     }
 }
 
