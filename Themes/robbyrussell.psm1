@@ -13,7 +13,12 @@ function Write-Theme {
     If ($lastCommandFailed) {
         $promtSymbolColor = $sl.Colors.WithForegroundColor
     }
-
+    
+    #check the python virtual environment
+    If (Test-VirtualEnv) {
+        $prompt += Write-Prompt -Object ("(" + $(Get-VirtualEnvName) + ") ")
+    }
+    
     # Writes the postfixes to the prompt
     $prompt += Write-Prompt -Object ($sl.PromptSymbols.PromptIndicator + "  ") -ForegroundColor $promtSymbolColor
 
