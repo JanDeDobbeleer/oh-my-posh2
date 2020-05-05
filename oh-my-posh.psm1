@@ -26,7 +26,12 @@ function Set-Prompt {
 
         if($sl.Options.ConsoleTitle) {
             $location = Get-Location
-            $folder = (Get-ChildItem | Select-Object -First 1).Parent.BaseName
+            $folder = (Get-ChildItem | Select-Object -First 1).Parent.FullName
+            $folderSplit = $folder -split "$([IO.Path]::DirectorySeparatorChar)", 0, "SimpleMatch"
+            if ($folderSplit -gt 3)
+            {
+                $folder = "$($folderSplit[0])", "...", "$($folderSplit[-2])", "$($folderSplit[-1])" -join "$([IO.Path]::DirectorySeparatorChar)"
+			}
             $prompt += "$([char]27)]2;$($folder)$([char]7)"
             if ($location.Provider.Name -eq "FileSystem") {
                 $prompt += "$([char]27)]9;9;`"$($location.Path)`"$([char]7)"
