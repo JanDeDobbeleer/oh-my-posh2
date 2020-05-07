@@ -41,6 +41,7 @@ function Write-Theme {
     }
 
     $rightPrompt = "$sFailed$sWith$sVenv$sAdmin$sTime"
+    $prompt = ""
     $prompt += Set-CursorForRightBlockWrite -textLength $rightPrompt.Length
     $prompt += Write-Prompt -Object $sFailed -ForegroundColor $sl.Colors.CommandFailedIconForegroundColor
     $prompt += Write-Prompt -Object $sWith   -ForegroundColor $sl.Colors.WithForegroundColor
@@ -59,20 +60,62 @@ function Write-Theme {
     # git info
     $vcsStatus = Get-VCSStatus
     if ($vcsStatus) {
-        $vcsInfo = Get-VcsInfo -status ($vcsStatus)
+        $vcsInfo = Get-VcsInfo -status $vcsStatus
         $lastColor = $vcsInfo.BackgroundColor
+        
         $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $sl.Colors.PromptBackgroundColor -BackgroundColor $lastColor
-        $prompt += Write-Prompt -Object " $($vcsInfo.VcInfo) " -ForegroundColor $sl.Colors.GitForegroundColor -BackgroundColor $lastColor
-    }
-    
 
+        if (!$sl.ColorizeVcInfoItems) {
+            $prompt += Write-Prompt -Object " $($vcsInfo.VcInfo) " -ForegroundColor $sl.Colors.GitForegroundColor -BackgroundColor $lastColor
+        }
+        else {
+            $settings = $global:GitPromptSettings
+
+            # Get the GIT Status Items
+            $prompt2 = ""
+            if ($settings.DefaultPromptWriteStatusFirst) {
+                $prompt2 += Write-Prompt $settings.PathStatusSeparator -BackgroundColor $lastColor
+            }
+    
+            $prompt2 += Write-Prompt -Object " $($sl.GitSymbols.BranchSymbol) " -ForegroundColor $sl.Colors.GitForegroundColor -BackgroundColor $lastColor
+            $prompt2 += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $lastColor -BackgroundColor $global:settings.BranchColor.BackgroundColor
+    
+            $prompt2 += Write-GitBranchName $vcsStatus
+            $prompt2 += Write-GitBranchStatus $vcsStatus
+            $prompt2 += Write-Prompt $settings.BeforeIndex
+            if ($settings.EnableFileStatus) {
+                if ($vcsStatus.HasIndex) {
+                    $prompt2 += Write-GitIndexStatus $vcsStatus
+                }
+                
+                if ($vcsStatus.HasWorking) {
+                    $prompt2 += Write-Prompt $settings.DelimStatus.Text -ForegroundColor $sl.Colors.GitForegroundColor
+                    $prompt2 += Write-GitWorkingDirStatus $vcsStatus
+                }
+            }
+    
+            $prompt2 += Write-GitWorkingDirStatusSummary $vcsStatus
+    
+            if ($settings.EnableStashStatus -and ($vcsStatus.StashCount -gt 0)) {
+                $prompt2 += Write-GitStashCount $vcsStatus
+            }
+    
+            # When status is first, place the separator after the status summary
+            if (!$settings.DefaultPromptWriteStatusFirst) {
+                $prompt2 += Write-Prompt $settings.PathStatusSeparator -BackgroundColor $lastColor
+            }
+    
+            $prompt += Write-Prompt -Object $prompt2 -BackgroundColor $lastColor
+        }
+    }
+        
     If ($sl.DoubleCommandLine) {
         $prompt += Set-Newline
     }
 
     # Writes the postfixes to the prompt
     $indicatorColor = If ($lastCommandFailed) { $sl.Colors.CommandFailedIconForegroundColor } Else { $lastColor }
-    $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $indicatorColor
+    $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $indicatorColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
     $prompt += ' '
     $prompt
 }
@@ -94,16 +137,23 @@ $sl.Colors.SessionInfoForegroundColor = [ConsoleColor]::White
 $sl.Colors.WithBackgroundColor = [ConsoleColor]::DarkRed
 $sl.Colors.VirtualEnvBackgroundColor = [ConsoleColor]::Red
 
-
 $sl.Colors.PromptForegroundColor = [ConsoleColor]::White
-$sl.Colors.GitForegroundColor = [ConsoleColor]::DarkGray
 $sl.Colors.WithForegroundColor = [ConsoleColor]::White
 $sl.Colors.VirtualEnvForegroundColor = [System.ConsoleColor]::White
 $sl.Colors.TimestampForegroundColor = [ConsoleColor]::DarkCyan
 $sl.Colors.CommandFailedIconForegroundColor = [ConsoleColor]::DarkRed
-$sl.Colors.AdminIconForegroundColor = [ConsoleColor]::DarkYellow
 $sl.Colors.PromptBackgroundColor = [ConsoleColor]::DarkBlue
 
+if ($sl.ColorizeVcInfoItems) {
+    $sl.Colors.GitForegroundColor = [ConsoleColor]::Black
+    $sl.Colors.AdminIconForegroundColor = [ConsoleColor]::White
+}
+else {
+    $sl.Colors.GitForegroundColor = [ConsoleColor]::DarkGray
+    $sl.Colors.AdminIconForegroundColor = [ConsoleColor]::DarkYellow
+}
 
+$global:GitPromptSettings.EnableStashStatus = $true
 
 $sl | Add-Member -NotePropertyName DoubleCommandLine -NotePropertyValue 0 -Force
+$sl | Add-Member -NotePropertyName ColorizeVcInfoItems -NotePropertyValue 0 -Force
