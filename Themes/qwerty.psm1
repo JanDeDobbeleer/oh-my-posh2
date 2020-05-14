@@ -24,8 +24,10 @@ function Write-Theme {
 
     $status = Get-VCSStatus
     if ($status) {
+        $themeInfo = Get-VcsInfo -status ($status)
+        $lastColor = $themeInfo.BackgroundColor
         $prompt += Write-Prompt -Object " ::" -ForegroundColor $sl.Colors.AccentColor
-        $prompt += Write-Prompt -Object " $($status.Branch)" -ForegroundColor $sl.Colors.GitDefaultColor
+        $prompt += Write-Prompt -Object " $($status.Branch)" -ForegroundColor $lastColor
     }
 
    
@@ -60,5 +62,4 @@ $sl.Colors.PromptSymbolColor = [ConsoleColor]::White
 $sl.Colors.VirtualEnvBackgroundColor = [System.ConsoleColor]::Magenta
 $sl.Colors.VirtualEnvForegroundColor = [System.ConsoleColor]::Magenta
 $sl.Colors.AccentColor = [System.ConsoleColor]::DarkGray
-$sl.Colors.GitDefaultColor = [System.ConsoleColor]::Green
 
