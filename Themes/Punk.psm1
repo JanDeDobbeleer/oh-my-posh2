@@ -10,7 +10,7 @@ function Write-Theme {
 
     #check the last command state and indicate if failed
     If ($lastCommandFailed) {
-        $prompt = Write-Prompt -Object "Don't Panic! " -ForegroundColor $sl.Colors.CommandFailedIconForegroundColor
+        $prompt = Write-Prompt -Object "Don't Panic!" -ForegroundColor $sl.Colors.CommandFailedIconForegroundColor
     }
 
     $prompt += Set-Newline
@@ -20,9 +20,9 @@ function Write-Theme {
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.ElevatedSymbol) " -ForegroundColor $sl.Colors.AdminIconForegroundColor
     }
 
-    $user = $sl.CurrentUser
-    if (Test-NotDefaultUser($user)) {
-        #$prompt += Write-Prompt -Object "$user " -ForegroundColor $sl.Colors.PromptForegroundColor
+    $status = Get-VCSStatus
+    if ($status) {
+        $prompt += Write-Prompt -Object "$($status.Branch)$([char]::ConvertFromUtf32(0xE0A0)) " -ForegroundColor $themeInfo.BackgroundColor
     }
 
     # write virtualenv
@@ -30,19 +30,8 @@ function Write-Theme {
         $prompt += Write-Prompt -Object "$(Get-VirtualEnvName)" -ForegroundColor $themeInfo.VirtualEnvForegroundColor
     }
 
-    $status = Get-VCSStatus
-    if ($status) {
-        $themeInfo = Get-VcsInfo -status ($status)
-        $prompt += Write-Prompt -Object "$($themeInfo.VcInfo)" -ForegroundColor $themeInfo.BackgroundColor
-    }
-
     # Writes the drive portion
     $prompt += Write-Prompt -Object " $(Get-FullPath -dir $pwd)" -ForegroundColor $sl.Colors.DriveForegroundColor
-
-
-    if ($with) {
-        $prompt += Write-Prompt -Object "$($with.ToUpper())" -BackgroundColor $sl.Colors.WithBackgroundColor -ForegroundColor $sl.Colors.WithForegroundColor
-    }
 
     # Writes the postfixes to the prompt
     $prompt += Write-Prompt -Object $sl.PromptSymbols.PromptIndicator -ForegroundColor $sl.Colors.DriveForegroundColor
