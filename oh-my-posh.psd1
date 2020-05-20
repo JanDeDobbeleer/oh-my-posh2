@@ -45,7 +45,8 @@ VariablesToExport = @()
 AliasesToExport = '*'
 
 # Functions to export from this module
-FunctionsToExport = @('Show-Colors',
+FunctionsToExport = @('Write-ColorPreview',
+                      'Show-Colors',
                       'Show-ThemeColors',
                       'Show-ThemeSymbols',
                       'Get-Theme',

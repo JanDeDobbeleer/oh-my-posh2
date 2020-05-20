@@ -23,7 +23,7 @@
 
 ## About
 
-A theme engine for Powershell in ConEmu inspired by the work done by Chris Benti on [PS-Config][chrisbenti-psconfig] and [Oh-My-ZSH][oh-my-zsh] on OSX and Linux (hence the name).
+A theme engine for Powershell in ConEmu and Windows Terminal inspired by the work done by Chris Benti on [PS-Config][chrisbenti-psconfig] and [Oh-My-ZSH][oh-my-zsh] on OSX and Linux (hence the name).
 
 More information about why I made this can be found on my [blog].
 
@@ -44,7 +44,9 @@ Features:
 
 ## Prerequisites
 
-You should use ConEmu to have a brilliant terminal experience on Windows. You can install it using [Chocolatey][chocolatey]:
+You should use ConEmu or Windows Terminal to have a brilliant terminal experience on Windows.
+
+You can install ConEmu using [Chocolatey][chocolatey]:
 
 ```powershell
 choco install ConEmu
@@ -57,6 +59,10 @@ $ scoop search conemu
 'extras' bucket:
   conemu (18.xx.xx)
 $ scoop install conemu
+```
+Windows Terminal can be acquired from the Microsoft Store, the [Windows Terminal repo](https://github.com/microsoft/terminal), or via [Chocolatey][chocolatey]:
+```powershell
+choco install microsoft-windows-terminal
 ```
 
 The fonts I use are Powerline fonts, there is a great [repository][nerdfonts] containing them.

@@ -15,14 +15,14 @@ image:
   - Visual Studio 2019
   - Ubuntu
 build_script:
-  - ps: (Get-Content '.\oh-my-posh.psd1' -Raw).Replace('1.0.0.0', $ENV:APPVEYOR_BUILD_VERSION) | Out-File -Encoding 'UTF8' '.\oh-my-posh.psd1'
+  - pwsh: (Get-Content '.\oh-my-posh.psd1' -Raw).Replace('1.0.0.0', $ENV:APPVEYOR_BUILD_VERSION) | Out-File -Encoding 'UTF8' '.\oh-my-posh.psd1'
 before_test:
   - pwsh: .\Build\setup_test_env.ps1
 test_script:
   - pwsh: >-
       if ($isWindows) {
         .\Build\test_windows.ps1
-      } 
+      }
       else {
         Invoke-Pester
       }
