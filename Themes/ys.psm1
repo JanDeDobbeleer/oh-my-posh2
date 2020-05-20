@@ -10,10 +10,9 @@ function Write-Theme {
     # check the last command state and indicate if failed
     If ($lastCommandFailed) {
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.FailedCommandSymbol) " -ForegroundColor $sl.Colors.CommandFailedIconForegroundColor
-        $prompt += ' '
     }
     # write # and space
-    $prompt = Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.PromptStartSymbolColor
+    $prompt = Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.PromptSymbolColor
     # write user and host
     $user = $sl.CurrentUser
     if (Test-NotDefaultUser($user)) {
@@ -40,24 +39,26 @@ function Write-Theme {
     $prompt += Write-Prompt "[$timeStamp]" -ForegroundColor $foregroundColor
     # new line
     $prompt += Set-Newline
-    $prompt += Write-Prompt -Object ($sl.PromptSymbols.PromptIndicator + " ") -ForegroundColor $sl.Colors.PromptSymbolColor
-
+    if (Test-Administrator) {
+        $prompt += Write-Prompt -Object ($sl.PromptSymbols.ElevatedSymbol + " ") -ForegroundColor $sl.Colors.AdminIconForegroundColor 
+    }
+    else{
+        $prompt += Write-Prompt -Object ($sl.PromptSymbols.PromptIndicator + " ") -ForegroundColor $sl.Colors.PromptSymbolColor 
+    }
 }
 
 $sl = $global:ThemeSettings # local settings
 $sl.PromptSymbols.StartSymbol                = '#'
 $sl.PromptSymbols.PromptIndicator            = '%'
-If (Test-Administrator) {
-        $sl.PromptSymbols.PromptIndicator    = '$'
-    }
+$sl.PromptSymbols.ElevatedSymbol             = '$'
 $sl.GitSymbols.BranchSymbol                  = ''
 $sl.GitSymbols.BranchUntrackedSymbol         = 'x'
 $sl.GitSymbols.BranchIdenticalStatusToSymbol = 'o'
 $sl.PromptSymbols.FailedCommandSymbol        = '?'
 
 # for dark theme
-$sl.Colors.PromptStartSymbolColor =  [ConsoleColor]::Blue
-$sl.Colors.PromptSymbolColor      = [ConsoleColor]::Red
+$sl.Colors.AdminIconForegroundColor = [ConsoleColor]::Red
+$sl.Colors.PromptSymbolColor      = [ConsoleColor]::Blue
 $sl.Colors.PromptForegroundColor  = [ConsoleColor]::Green
 $sl.Colors.PromptHighlightColor   = [ConsoleColor]::Cyan
 $sl.Colors.GitDefaultColor        = [ConsoleColor]::Yellow
