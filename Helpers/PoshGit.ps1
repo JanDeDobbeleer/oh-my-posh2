@@ -141,7 +141,7 @@ function Get-VcsInfo {
             if (!$status.HasIndex) {
                 $vcInfo = $vcInfo +  $sl.GitSymbols.BeforeWorkingSymbol
             }
-            if($showStatusWhenZero -or $status.Working.Added) {
+            if($spg.showStatusWhenZero -or $status.Working.Added) {
                 $vcInfo = $vcInfo +  "$($spg.FileAddedText)$($status.Working.Added.Count) "
             }
             if($spg.ShowStatusWhenZero -or $status.Working.Modified) {
