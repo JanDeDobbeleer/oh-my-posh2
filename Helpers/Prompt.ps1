@@ -92,7 +92,7 @@ function Test-IsVCSRoot {
         $Path
     )
 
-    return (Test-Path -Path "$($Path)\.git") -Or (Test-Path -Path "$($Path)\.hg") -Or (Test-Path -Path "$($Path)\.svn")
+    return (Test-Path -LiteralPath "$($Path)\.git") -Or (Test-Path -LiteralPath "$($Path)\.hg") -Or (Test-Path -LiteralPath "$($Path)\.svn")
 }
 
 function Get-FullPath {
