@@ -207,6 +207,10 @@ Set-Theme paradox
 
 ![Star Theme][img-theme-zash]
 
+### Lambda
+
+![Lambda Theme](./img/lambda.png)
+
 
 ## Creating your own theme
 
