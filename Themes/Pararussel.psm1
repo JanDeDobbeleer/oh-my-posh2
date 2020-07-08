@@ -65,11 +65,11 @@ function Get-TimeSinceLastCommit {
 }
 
 $sl = $global:ThemeSettings #local settings
-$sl.PromptSymbols.PromptIndicator = '👁'
-$sl.PromptSymbols.HomeSymbol = '🏠'
+$sl.PromptSymbols.PromptIndicator = [char]::ConvertFromUtf32(0x1F441)
+$sl.PromptSymbols.HomeSymbol = [char]::ConvertFromUtf32(0x1F3E0)
 $sl.Colors.PromptSymbolColor = [ConsoleColor]::Green
 $sl.Colors.PromptHighlightColor = [ConsoleColor]::Blue
 $sl.Colors.DriveForegroundColor = [ConsoleColor]::Cyan
 $sl.Colors.WithForegroundColor = [ConsoleColor]::Red
-$sl.PromptSymbols.GitDirtyIndicator ='📌'
+$sl.PromptSymbols.GitDirtyIndicator = [char]::ConvertFromUtf32(0x1F4CC)
 $sl.Colors.GitDefaultColor = [ConsoleColor]::Yellow
