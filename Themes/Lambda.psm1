@@ -18,8 +18,9 @@ function Write-Theme {
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.ElevatedSymbol) " -ForegroundColor $sl.Colors.AdminIconForegroundColor
     }
 
+    $user = $sl.CurrentUser
     $lambda = [char]::ConvertFromUtf32(0x000003BB)
-    if (Test-NotDefaultUser($lambda)) {
+    if (Test-NotDefaultUser($user)) {
         $prompt += Write-Prompt -Object "$lambda " -ForegroundColor $sl.Colors.PromptForegroundColor
     }
 
@@ -43,6 +44,7 @@ function Write-Theme {
         $prompt += Write-Prompt -Object "$($with.ToUpper()) " -BackgroundColor $sl.Colors.WithBackgroundColor -ForegroundColor $sl.Colors.WithForegroundColor
     }
 
+    $prompt
 }
 
 $sl = $global:ThemeSettings #local settings
