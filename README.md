@@ -215,6 +215,10 @@ Set-Theme paradox
 
 ![Lambda Theme](./img/lambda.png)
 
+### Emodipt
+
+![Emodipt Theme][img-theme-emodipt]
+
 ## Creating your own theme
 
 If you want to create a theme it can be done rather easily by adding a `mytheme.psm1` file in the folder indicated in `$ThemeSettings.MyThemesLocation` (the folder defaults to `~\Documents\WindowsPowerShell\PoshThemes`, feel free to change it).
@@ -325,4 +329,5 @@ if($env:LC_TERMINAL -eq "iTerm2") {
 [img-theme-material2]: img/material2.png
 [img-theme-star]: img/star.png
 [img-theme-zash]: img/zash.png
+[img-theme-emodipt]: img/emodipt.png
 [consoletitle]: https://github.com/JanDeDobbeleer/oh-my-posh/issues/261#issuecomment-649701607
