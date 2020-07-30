@@ -44,8 +44,8 @@ function Write-Theme {
 
 $sl = $global:ThemeSettings #local settings
 $sl.GitSymbols.BranchSymbol = [char]::ConvertFromUtf32(0x1F6A6)
-$sl.GitSymbols.BranchAheadStatusSymbol = [char]::ConvertFromUtf32(0x2B06)
-$sl.GitSymbols.BranchBehindStatusSymbol = [char]::ConvertFromUtf32(0x2B07)
+$sl.GitSymbols.BranchAheadStatusSymbol = [char]::ConvertFromUtf32(0x2B6B)
+$sl.GitSymbols.BranchBehindStatusSymbol = [char]::ConvertFromUtf32(0x2B6D)
 $sl.GitSymbols.BranchIdenticalStatusToSymbol = [char]::ConvertFromUtf32(0x2705)
 $sl.GitSymbols.BranchUntrackedSymbol = [char]::ConvertFromUtf32(0x274E)
 $sl.PromptSymbols.PromptIndicator = [char]::ConvertFromUtf32(0x276F)
