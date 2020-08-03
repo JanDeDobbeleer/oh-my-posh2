@@ -11,6 +11,23 @@ function Write-Theme {
 
     $lastColor = $sl.Colors.PromptBackgroundColor
 
+# identify background colors for administrative rights
+	# declare the colors
+	$rootBackground = [ConsoleColor]::Magenta
+	$rootForeground = [ConsoleColor]::White
+	$reguserBackground = [ConsoleColor]::Blue
+	$reguserForeground = [ConsoleColor]::White
+
+	# make it work
+	If (Test-Administrator) {
+		$promptTagBackground = $rootBackground
+		$rootForeground = $rootForeground
+		}
+		else {
+		$promptTagBackground = $reguserBackground
+		$promptTagForeground = $reguserForeground
+		}
+
     $prompt = Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
 
     $user = $sl.CurrentUser
@@ -44,24 +61,29 @@ function Write-Theme {
         $prompt += Write-Prompt -Object " $($with.ToUpper()) " -BackgroundColor $sl.Colors.WithBackgroundColor -ForegroundColor $sl.Colors.WithForegroundColor
         $lastColor = $sl.Colors.WithBackgroundColor
     }
+
     If ($lastCommandFailed) {
-	$errsign = "!".Replace('\', ' ' + [char]::ConvertFromUtf32(0xE0B1) + ' ') + ' '
-        $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $lastColor -BackgroundColor $ErrBackground
-	$prompt += Write-Prompt -Object $errsign -ForegroundColor $ErrForeground -BackgroundColor $ErrBackground
-	$lastColor = $ErrBackground
-    }
+	$errsign = "ERROR".Replace('\', ' ' + [char]::ConvertFromUtf32(0xE0B1) + ' ') + ' '
+        $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $lastColor -BackgroundColor $errBackground
+	$prompt += Write-Prompt -Object $errsign -ForegroundColor $errForeground -BackgroundColor $errBackground
+	$lastColor = $errBackground
+	$promptTagBackgroundStatusErrCheck = $errBackground
+    	}
+	else {
+	$promptTagBackgroundStatusErrCheck = $promptTagBackground
+	}
 
  If (Test-Administrator) {
 	$rootsign = "#".Replace('\', ' ' + [char]::ConvertFromUtf32(0xE0B1) + ' ') + ' '
-        $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $lastColor -BackgroundColor $RootBackground
-	$prompt += Write-Prompt -Object $rootsign -ForegroundColor $RootForeground -BackgroundColor $RootBackground
-	$prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $RootBackground -BackgroundColor $sl.Colors.SessionInfoForegroundColor
+        $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $lastColor -BackgroundColor $promptTagBackgroundStatusErrCheck
+	$prompt += Write-Prompt -Object $rootsign -ForegroundColor $promptTagForeground -BackgroundColor $promptTagBackgroundStatusErrCheck
+	$prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $promptTagBackgroundStatusErrCheck -BackgroundColor $sl.Colors.SessionInfoForegroundColor
 	}
 	else {
 	$norootsign = "$".Replace('\', ' ' + [char]::ConvertFromUtf32(0xE0B1) + ' ') + ' '
-	$prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $lastColor -BackgroundColor $ReguserBackground
-	$prompt += Write-Prompt -Object $norootsign -ForegroundColor $ReguserForeground -BackgroundColor $ReguserBackground
-	$prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $ReguserBackground -BackgroundColor $sl.Colors.SessionInfoForegroundColor
+	$prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $lastColor -BackgroundColor $promptTagBackgroundStatusErrCheck
+	$prompt += Write-Prompt -Object $norootsign -ForegroundColor $promptTagForeground -BackgroundColor $promptTagBackgroundStatusErrCheck
+	$prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $promptTagBackgroundStatusErrCheck -BackgroundColor $sl.Colors.SessionInfoForegroundColor
 	}
 
     # Writes the postfix to the prompt
@@ -81,9 +103,5 @@ $sl.Colors.WithForegroundColor = [ConsoleColor]::White
 $sl.Colors.WithBackgroundColor = [ConsoleColor]::DarkRed
 $sl.Colors.VirtualEnvBackgroundColor = [System.ConsoleColor]::Red
 $sl.Colors.VirtualEnvForegroundColor = [System.ConsoleColor]::White
-$RootBackground = [ConsoleColor]::Magenta
-$RootForeground = [ConsoleColor]::White
-$ReguserBackground = [ConsoleColor]::Blue
-$ReguserForeground = [ConsoleColor]::White
-$ErrForeground = [ConsoleColor]::White
-$ErrBackground = [ConsoleColor]::DarkRed
+$errForeground = [ConsoleColor]::White
+$errBackground = [ConsoleColor]::DarkRed
