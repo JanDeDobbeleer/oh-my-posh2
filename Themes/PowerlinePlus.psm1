@@ -11,14 +11,22 @@ function Write-Theme {
 
     $lastColor = $sl.Colors.PromptBackgroundColor
 
+$authorityStatus = ((Invoke-CimMethod -InputObject $(Get-CimInstance Win32_Process -Filter "Handle=$PID") -MethodName GetOwner).User) -eq 'SYSTEM'
+
 # identify background colors for administrative rights
 	# declare the colors
 	$rootBackground = [ConsoleColor]::Magenta
 	$rootForeground = [ConsoleColor]::White
 	$reguserBackground = [ConsoleColor]::Blue
 	$reguserForeground = [ConsoleColor]::White
-
+	$authorityForeground = [ConsoleColor]::White
+	$authorityBackground = [ConsoleColor]::Red
 	# make it work
+	If ($authorityStatus) {
+		$promptTagBackground = $authorityBackground
+		$promptTagForeground = $authorityForeground
+		}
+		else {
 	If (Test-Administrator) {
 		$promptTagBackground = $rootBackground
 		$rootForeground = $rootForeground
@@ -27,14 +35,20 @@ function Write-Theme {
 		$promptTagBackground = $reguserBackground
 		$promptTagForeground = $reguserForeground
 		}
+		}
 
     $prompt = Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
 
     $user = $sl.CurrentUser
     $computer = [System.Environment]::MachineName
-    if (Test-NotDefaultUser($user)) {
-        $prompt += Write-Prompt -Object "$user@$computer" -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
-    }
+	if ($authorityStatus) {
+		$prompt += Write-Prompt -Object "$computer" -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
+	}
+	else {
+	if (Test-NotDefaultUser($user)) {
+		$prompt += Write-Prompt -Object "$user@$computer" -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
+		}
+	}
 
     if (Test-VirtualEnv) {
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $sl.Colors.SessionInfoBackgroundColor -BackgroundColor $sl.Colors.VirtualEnvBackgroundColor
@@ -72,7 +86,13 @@ function Write-Theme {
 	else {
 	$promptTagBackgroundStatusErrCheck = $promptTagBackground
 	}
-
+If ($authorityStatus) {
+	$authoritysign = "@".Replace('\', ' ' + [char]::ConvertFromUtf32(0xE0B1) + ' ') + ' '
+        $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $lastColor -BackgroundColor $promptTagBackgroundStatusErrCheck
+        $prompt += Write-Prompt -Object $authoritysign -ForegroundColor $promptTagForeground -BackgroundColor $promptTagBackgroundStatusErrCheck
+        $prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $promptTagBackgroundStatusErrCheck -BackgroundColor $sl.Colors.SessionInfoForegroundColor
+	}
+	else {
  If (Test-Administrator) {
 	$rootsign = "#".Replace('\', ' ' + [char]::ConvertFromUtf32(0xE0B1) + ' ') + ' '
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $lastColor -BackgroundColor $promptTagBackgroundStatusErrCheck
@@ -85,7 +105,7 @@ function Write-Theme {
 	$prompt += Write-Prompt -Object $norootsign -ForegroundColor $promptTagForeground -BackgroundColor $promptTagBackgroundStatusErrCheck
 	$prompt += Write-Prompt -Object $sl.PromptSymbols.SegmentForwardSymbol -ForegroundColor $promptTagBackgroundStatusErrCheck -BackgroundColor $sl.Colors.SessionInfoForegroundColor
 	}
-
+	}
     # Writes the postfix to the prompt
     $prompt += ' '
     $prompt
