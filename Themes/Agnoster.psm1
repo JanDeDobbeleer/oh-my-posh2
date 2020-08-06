@@ -10,8 +10,12 @@ function Write-Theme {
     )
 
     $lastColor = $sl.Colors.PromptBackgroundColor
-
-    $prompt = Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
+    
+    $prompt=''
+    
+    if($sl.PromptSymbols.StartSymbol -ne ' ') {
+    	$prompt += Write-Prompt -Object $sl.PromptSymbols.StartSymbol -ForegroundColor $sl.Colors.SessionInfoForegroundColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
+    }
 
     #check the last command state and indicate if failed
     If ($lastCommandFailed) {
