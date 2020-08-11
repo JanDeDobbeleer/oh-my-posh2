@@ -12,6 +12,7 @@ function Set-Prompt {
     Import-Module $sl.CurrentThemeLocation -Force
 
     [ScriptBlock]$Prompt = {
+        $realLASTEXITCODE = $global:LASTEXITCODE
         $lastCommandFailed = ($global:error.Count -gt $sl.ErrorCount) -or -not $?
         $sl.ErrorCount = $global:error.Count
 
@@ -39,6 +40,8 @@ function Set-Prompt {
         }
 
         $prompt
+        $global:LASTEXITCODE = $realLASTEXITCODE
+        Remove-Variable realLASTEXITCODE
     }
 
     Set-Item -Path Function:prompt -Value $Prompt -Force
