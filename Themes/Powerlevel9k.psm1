@@ -57,9 +57,9 @@ function Write-Theme {
     # Update battery icon based on status and charge (works only on Windows)
     if ($env:OS -eq 'Windows_NT') {
         $charge = (Get-WmiObject win32_battery).EstimatedChargeRemaining
-        if ((Get-WmiObject -Class batterystatus -Namespace root\wmi).Charging) {
-            if ($charge -eq 100) { $batteryhex = 0xf582 }
-            else { $batteryhex = 0xf583 }
+        if ((Get-WmiObject -Class batterystatus -Namespace root\wmi).PowerOnline) {
+            if ((Get-WmiObject -Class batterystatus -Namespace root\wmi).Charging) { $batteryhex = 0xf583 }
+            else { $batteryhex = 0xf582 }
         }
         else {
             [int]$level = $charge / 10
