@@ -54,31 +54,9 @@ function Write-Theme {
         $rightElements.Add([System.Tuple]::Create(" $adminsymbol", $sl.Colors.AdminIconForegroundColor))
     }
 
-    # Update battery icon based on status and charge (works only on Windows)
-    if ($env:OS -eq 'Windows_NT') {
-        $charge = (Get-WmiObject win32_battery).EstimatedChargeRemaining
-        if ((Get-WmiObject -Class batterystatus -Namespace root\wmi).PowerOnline) {
-            if ((Get-WmiObject -Class batterystatus -Namespace root\wmi).Charging) { $batteryhex = 0xf583 }
-            else { $batteryhex = 0xf582 }
-        }
-        else {
-            [int]$level = $charge / 10
-            switch ($level) {
-                0 { $batteryhex = 0xf58d }
-                1 { $batteryhex = 0xf579 }
-                2 { $batteryhex = 0xf57a }
-                3 { $batteryhex = 0xf57b }
-                4 { $batteryhex = 0xf57c }
-                5 { $batteryhex = 0xf57d }
-                6 { $batteryhex = 0xf57e }
-                7 { $batteryhex = 0xf57f }
-                8 { $batteryhex = 0xf580 }
-                9 { $batteryhex = 0xf581 }
-                Default { $batteryhex = 0xf578 }
-            }
-        }
-        $battery = [char]::ConvertFromUtf32($batteryhex)
-        $rightElements.Add([System.Tuple]::Create(" $charge% $battery ", $sl.Colors.PromptForegroundColor))
+    if (Get-BatteryInfo) {
+        $battery = Get-BatteryInfo
+        $rightElements.Add([System.Tuple]::Create(" $battery ", $sl.Colors.PromptForegroundColor))
         $rightElements.Add([System.Tuple]::Create($sl.PromptSymbols.SegmentSubBackwardSymbol, $sl.Colors.PromptForegroundColor))
     }
 

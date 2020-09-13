@@ -225,5 +225,57 @@ function Set-Newline {
     return Write-Prompt "`n"
 }
 
+function Get-BatteryInfo {
+    if ($env:OS -eq 'Windows_NT' -or $IsWindows) {
+
+        if (!(Get-CimInstance win32_battery)) { return }
+        
+        $charge = (Get-CimInstance win32_battery).EstimatedChargeRemaining
+        $connected = (Get-CimInstance -Class batterystatus -Namespace root\wmi).PowerOnline
+        $charging = (Get-CimInstance -Class batterystatus -Namespace root\wmi).Charging
+
+    } elseif ($IsLinux) {
+        
+        $syspath = "/sys/class/power_supply/"
+        if (!(Get-ChildItem $syspath)) { return }
+
+        $powerclass = (Get-ChildItem $syspath | Where-Object { $_.Name -like 'AC*' }).Name
+        if ($powerclass -is [Object[]]) { $powerdevice = $syspath + $powerclass[-1] } 
+        else { $powerdevice = $syspath + $powerclass }
+        $connected = Get-Content "$powerdevice/online"
+
+        $batteryclass = (Get-ChildItem $syspath | Where-Object { $_.Name -like 'BAT*' }).Name
+        if ($batteryclass -is [Object[]]) { $batterydevice = $syspath + $batteryclass[-1] } 
+        else { $batterydevice = $syspath + $batteryclass }
+        $charge = Get-Content "$batterydevice/capacity"
+        $chargestatus = Get-Content "$batterydevice/status"
+        if ($chargestatus -eq "Charging" -or $chargestatus -eq "Full") { $charging = 1 }
+        else { $charging = 0 }
+
+    } else { return }
+
+    if ($connected) {
+        if ($charging) { $batteryhex = 0xf583 }
+        else { $batteryhex = 0xf582 }
+    } else {
+        [int]$level = $charge / 10
+        switch ($level) {
+            0 { $batteryhex = 0xf58d }
+            1 { $batteryhex = 0xf579 }
+            2 { $batteryhex = 0xf57a }
+            3 { $batteryhex = 0xf57b }
+            4 { $batteryhex = 0xf57c }
+            5 { $batteryhex = 0xf57d }
+            6 { $batteryhex = 0xf57e }
+            7 { $batteryhex = 0xf57f }
+            8 { $batteryhex = 0xf580 }
+            9 { $batteryhex = 0xf581 }
+            Default { $batteryhex = 0xf578 }
+        }
+    }
+    $battery = [char]::ConvertFromUtf32($batteryhex)
+    return "$charge% $battery"
+}
+
 $escapeChar = [char]27
 $sl = $global:ThemeSettings #local settings
