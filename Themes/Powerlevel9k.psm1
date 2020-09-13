@@ -54,8 +54,8 @@ function Write-Theme {
         $rightElements.Add([System.Tuple]::Create(" $adminsymbol", $sl.Colors.AdminIconForegroundColor))
     }
 
-    if (Get-BatteryInfo) {
-        $battery = Get-BatteryInfo
+    $battery = Get-BatteryInfo
+    if ($battery) {
         $rightElements.Add([System.Tuple]::Create(" $battery ", $sl.Colors.PromptForegroundColor))
         $rightElements.Add([System.Tuple]::Create($sl.PromptSymbols.SegmentSubBackwardSymbol, $sl.Colors.PromptForegroundColor))
     }
