@@ -228,23 +228,26 @@ function Set-Newline {
 function Get-BatteryInfo {
     if ($env:OS -eq 'Windows_NT' -or $IsWindows) {
 
-        if (!(Get-CimInstance win32_battery)) { return }
+        $batteryclass = Get-CimInstance win32_battery
+        if (!$batteryclass) { return }
         
-        $charge = (Get-CimInstance win32_battery).EstimatedChargeRemaining
-        $connected = (Get-CimInstance -Class batterystatus -Namespace root\wmi).PowerOnline
-        $charging = (Get-CimInstance -Class batterystatus -Namespace root\wmi).Charging
+        $powerclass = Get-CimInstance -Class batterystatus -Namespace root\wmi
+        $charge = $batteryclass.EstimatedChargeRemaining
+        $connected = $powerclass.PowerOnline
+        $charging = $powerclass.Charging
 
     } elseif ($IsLinux) {
         
         $syspath = "/sys/class/power_supply/"
-        if (!(Get-ChildItem $syspath)) { return }
+        $syspathcontents = Get-ChildItem $syspath
+        if (!$syspathcontents) { return }
 
-        $powerclass = (Get-ChildItem $syspath | Where-Object { $_.Name -like 'AC*' }).Name
+        $powerclass = ($syspathcontents | Where-Object { $_.Name -like 'AC*' }).Name
         if ($powerclass -is [Object[]]) { $powerdevice = $syspath + $powerclass[-1] } 
         else { $powerdevice = $syspath + $powerclass }
         $connected = Get-Content "$powerdevice/online"
 
-        $batteryclass = (Get-ChildItem $syspath | Where-Object { $_.Name -like 'BAT*' }).Name
+        $batteryclass = ($syspathcontents | Where-Object { $_.Name -like 'BAT*' }).Name
         if ($batteryclass -is [Object[]]) { $batterydevice = $syspath + $batteryclass[-1] } 
         else { $batterydevice = $syspath + $batteryclass }
         $charge = Get-Content "$batterydevice/capacity"
