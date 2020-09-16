@@ -13,10 +13,13 @@ function Write-Theme {
     $lastColor = $sl.Colors.SessionInfoBackgroundColor
     $login = $sl.CurrentUser
     $computer = (Get-Culture).TextInfo.ToTitleCase([System.Environment]::MachineName.ToLower());
+    if ($IsLinux) { $iconhex = 0xf17c }
+    elseif ($IsMacOS) { $iconhex = 0xf302 }
+    else { $iconhex = 0xe70f }
 
     ## Left Part
     $prompt = Write-Prompt -Object "╔═" -ForegroundColor $sl.Colors.PromptSymbolColor
-    $prompt += Write-Prompt -Object " $($sl.PromptSymbols.StartSymbol)" -ForegroundColor $sl.Colors.StartForegroundColor
+    $prompt += Write-Prompt -Object " $([char]::ConvertFromUtf32($iconhex))" -ForegroundColor $sl.Colors.StartForegroundColor
     $prompt += Write-Prompt -Object " $($sl.PromptSymbols.SegmentSubForwardSymbol)" -ForegroundColor $sl.Colors.UserForegroundColor
     $prompt += Write-Prompt -Object " $login@$computer " -ForegroundColor $sl.Colors.UserForegroundColor
     $prompt += Write-Prompt -Object "$($sl.PromptSymbols.SegmentForwardSymbol) " -ForegroundColor $sl.Colors.PromptSymbolColor -BackgroundColor $sl.Colors.SessionInfoBackgroundColor
@@ -74,11 +77,11 @@ function Write-Theme {
         9 { $clockhex = 0xe38a }
         10 { $clockhex = 0xe38b }
         11 { $clockhex = 0xe38c }
-        Default { $clockhex = 0xe381 }    
+        Default { $clockhex = 0xe381 }
     }
     $clocksymbol = [char]::ConvertFromUtf32($clockhex)
     $rightElements.Add([System.Tuple]::Create(" $(Get-Date -Format HH:mm:ss) $clocksymbol ", $sl.Colors.PromptForegroundColor))
-    
+
     $lengthList = [Linq.Enumerable]::Select($rightElements, [Func[Tuple[string, ConsoleColor], int]] { $args[0].Item1.Length })
     $total = [Linq.Enumerable]::Sum($lengthList)
     # Transform into total length
@@ -101,7 +104,6 @@ function Write-Theme {
 }
 
 $sl = $global:ThemeSettings #local settings
-$sl.PromptSymbols.StartSymbol = [char]::ConvertFromUtf32(0xe70f)
 $sl.PromptSymbols.PromptIndicator = [char]::ConvertFromUtf32(0x276F)
 $sl.PromptSymbols.SegmentForwardSymbol = [char]::ConvertFromUtf32(0xE0B0)
 $sl.PromptSymbols.SegmentSubForwardSymbol = [char]::ConvertFromUtf32(0xE0B1)
