@@ -40,7 +40,9 @@ function Set-Prompt {
         }
 
         $prompt
-        $global:LASTEXITCODE = $realLASTEXITCODE
+        if ($sl.Options.PreserveLastExitCode) {
+            $global:LASTEXITCODE = $realLASTEXITCODE
+        }
         Remove-Variable realLASTEXITCODE -Confirm:$false
     }
 
