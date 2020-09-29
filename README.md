@@ -23,7 +23,7 @@
 
 ## About
 
-A theme engine for Powershell in ConEmu and Windows Terminal inspired by the work done by Chris Benti on [PS-Config][chrisbenti-psconfig] and [Oh-My-ZSH][oh-my-zsh] on OSX and Linux (hence the name).
+A theme engine for Powershell inspired by the work done by Chris Benti on [PS-Config][chrisbenti-psconfig] and [Oh-My-ZSH][oh-my-zsh] on OSX and Linux (hence the name).
 
 More information about why I made this can be found on my [blog].
 
