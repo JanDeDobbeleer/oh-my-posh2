@@ -23,7 +23,7 @@ function Write-Theme {
     $status = Get-VCSStatus
     if ($status) {
         $themeInfo = Get-VcsInfo -status ($status)
-        $info = "$($themeInfo.VcInfo)".Split("≣")[1].TrimStart()
+        $info = "$($themeInfo.VcInfo)".Split(" ")[1].TrimStart()
         $prompt += Write-Prompt -Object " on " -ForegroundColor $sl.Colors.PromptForegroundColor
         $prompt += Write-Prompt -Object "$($sl.GitSymbols.BranchSymbol+' ')" -ForegroundColor $sl.Colors.GitDefaultColor
         $prompt += Write-Prompt -Object "$($status.Branch)" -ForegroundColor $sl.Colors.GitDefaultColor
