@@ -23,7 +23,7 @@
 
 ## About
 
-A theme engine for Powershell in ConEmu and Windows Terminal inspired by the work done by Chris Benti on [PS-Config][chrisbenti-psconfig] and [Oh-My-ZSH][oh-my-zsh] on OSX and Linux (hence the name).
+A theme engine for Powershell inspired by the work done by Chris Benti on [PS-Config][chrisbenti-psconfig] and [Oh-My-ZSH][oh-my-zsh] on OSX and Linux (hence the name).
 
 More information about why I made this can be found on my [blog].
 
@@ -44,27 +44,26 @@ Features:
 
 ## Prerequisites
 
-You should use ConEmu or Windows Terminal to have a brilliant terminal experience on Windows.
+You should use a modern console host like [ConEmu][conemu], [Alacritty][alacritty], [Terminus][terminus], [Hyper][hyper], [FluentTerminal][fluentterminal], or the official [Windows Terminal][windowsterminal] to have a brilliant terminal experience on Windows.
 
-You can install ConEmu using [Chocolatey][chocolatey]:
+There are multiple ways to acquire Windows Terminal - from the Microsoft [Store](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701), the GitHub [repo](https://github.com/microsoft/terminal/releases), or the below commandline methods:
 
-```powershell
-choco install ConEmu
-```
-
-You can also install it using [Scoop][scoop] via the [extras bucket][scoop-extras]:
+Via [WinGet][winget] (official package manager for Windows):
 
 ```powershell
-$ scoop search conemu
-'extras' bucket:
-  conemu (18.xx.xx)
-$ scoop install conemu
+winget install --id=Microsoft.WindowsTerminal -e
 ```
 
-Windows Terminal can be acquired from the Microsoft Store, the [Windows Terminal repo](https://github.com/microsoft/terminal), or via [Chocolatey][chocolatey]:
+Via [Chocolatey][chocolatey]:
 
 ```powershell
 choco install microsoft-windows-terminal
+```
+
+Via [Scoop][scoop]:
+
+```powershell
+scoop install windows-terminal
 ```
 
 The fonts I use are Powerline fonts, there is a great [repository][nerdfonts] containing them.
@@ -308,6 +307,13 @@ if($env:LC_TERMINAL -eq "iTerm2") {
 [kofi]: https://ko-fi.com/jandedobbeleer
 [scoop]: https://scoop.sh/
 [scoop-extras]: https://github.com/lukesampson/scoop/wiki/Buckets
+[windowsterminal]: https://github.com/microsoft/terminal
+[conemu]: https://conemu.github.io/
+[alacritty]: https://github.com/alacritty/alacritty
+[terminus]: https://eugeny.github.io/terminus/
+[fluentterminal]: https://github.com/felixse/FluentTerminal
+[hyper]: https://hyper.is/
+[winget]: https://github.com/microsoft/winget-cli
 [chrisbenti-psconfig]: https://github.com/chrisbenti/PS-Config
 [keithdahlby-poshgit]: https://github.com/dahlbyk/posh-git
 [jleechpe]: https://github.com/jleechpe

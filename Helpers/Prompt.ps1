@@ -255,6 +255,17 @@ function Get-BatteryInfo {
         if ($chargestatus -eq "Charging" -or $chargestatus -eq "Full") { $charging = 1 }
         else { $charging = 0 }
 
+    } elseif ($IsMacOS) {
+
+        $powercommand = pmset -g ps
+        if ($powercommand[1] -notlike "*InternalBattery*") { "" }
+
+        $charge = $powercommand[1].Split()[3].TrimEnd('%;')
+        if ($powercommand[1].Split()[4].TrimEnd(';') -like 'charging') { $charging = 1 }
+        else { $charging = 0 }
+        if ($powercommand[0] -like '*Battery*') { $connected = 0 }
+        else { $connected = 1 }
+
     } else { return }
 
     if ($connected) {
