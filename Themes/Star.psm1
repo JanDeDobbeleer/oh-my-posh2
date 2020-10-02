@@ -22,10 +22,12 @@ function Write-Theme {
 
     $status = Get-VCSStatus
     if ($status) {
+        $themeInfo = Get-VcsInfo -status ($status)
+        $info = "$($themeInfo.VcInfo)".Split(" ")[1].TrimStart()
         $prompt += Write-Prompt -Object " on " -ForegroundColor $sl.Colors.PromptForegroundColor
         $prompt += Write-Prompt -Object "$($sl.GitSymbols.BranchSymbol+' ')" -ForegroundColor $sl.Colors.GitDefaultColor
         $prompt += Write-Prompt -Object "$($status.Branch)" -ForegroundColor $sl.Colors.GitDefaultColor
-        $prompt += Write-Prompt -Object "[?!]" -ForegroundColor $sl.Colors.PromptHighlightColor
+        $prompt += Write-Prompt -Object " [$($info)]" -ForegroundColor $sl.Colors.PromptHighlightColor
         $filename = 'package.json'
         if (Test-Path -path $filename) {
             $prompt += Write-Prompt -Object (" via node") -ForegroundColor $sl.Colors.PromptSymbolColor
