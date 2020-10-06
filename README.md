@@ -12,6 +12,28 @@
 [![Liberapay][liberapay-badge]][liberapay]
 [![Ko-Fi][kofi-badge]][kofi]
 
+## Introducing V3 and what it means for V2
+
+It's been an amazing ride for Oh myPosh, but the time has come to step it up a notch.
+Developers nowadays no longer stick to one shell/language, they are all tools we use to solve a certain problem.
+The same needs to apply to Oh my Posh. It's time to adjust to that philosophy.
+
+That's why this version of Oh my Posh is entering maintenance mode while I'm working hard on getting [V3][v3] out of the door.
+Given that [V3][v3] is entirely different under the hood, it's hosted [separately][v3] for now.
+From a user perspective, it should give the same experience out-of-the-box, with the added advantage
+that custom themes are a first class, no code citizen.
+
+Right now, [V3][v3] is in beta, and you can install it the same way you're used to if you want to give it a spin.
+
+```powershell
+Install-Module oh-my-posh -Scope CurrentUser -AllowPrerelease
+```
+
+[Documentation][docs-v3] is also available which should give a better experience than this **README** has over the past few years :-)
+
+If you're a developer looking to add functionality, please have a look at [V3][v3] to see if it already exists there.
+If not, feel free to create an issue or PR on [V3][v3], _**I will only be accepting bug fixes on V2 from now on**_.
+
 ## Table of Contents
 
 - [About](#about)
@@ -44,7 +66,7 @@ Features:
 
 ## Prerequisites
 
-You should use a modern console host like [ConEmu][conemu], [Alacritty][alacritty], [Terminus][terminus], [Hyper][hyper], [FluentTerminal][fluentterminal], or the official [Windows Terminal][windowsterminal] to have a brilliant terminal experience on Windows.
+You should use a modern console host like [ConEmu][conemu], [Alacritty][alacritty], [Terminus][terminus], [Hyper][hyper], [FluentTerminal][fluentterminal], or the official [Windows Terminal][windowsterminal] to have a great terminal experience on Windows.
 
 There are multiple ways to acquire Windows Terminal - from the Microsoft [Store](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701), the GitHub [repo](https://github.com/microsoft/terminal/releases), or the below commandline methods:
 
@@ -342,3 +364,5 @@ if($env:LC_TERMINAL -eq "iTerm2") {
 [img-theme-emodipt]: img/emodipt.png
 [img-theme-operator]: img/operator.png
 [consoletitle]: https://github.com/JanDeDobbeleer/oh-my-posh/issues/261#issuecomment-649701607
+[v3]: https://github.com/JanDeDobbeleer/oh-my-posh3
+[docs-v3]: https://ohmyposh.dev
