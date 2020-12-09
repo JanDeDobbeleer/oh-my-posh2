@@ -176,6 +176,9 @@ function Test-VirtualEnv {
 }
 
 function Get-VirtualEnvName {
+    # Suppress prompt from virtualenv
+    $env:VIRTUAL_ENV_DISABLE_PROMPT="True"
+
     if ($env:VIRTUAL_ENV) {
         if ($PSVersionTable.Platform -eq 'Unix') {
             $virtualEnvName = ($env:VIRTUAL_ENV -split '/')[-1]
