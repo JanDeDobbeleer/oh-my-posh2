@@ -203,6 +203,10 @@ Set-Theme paradox
 
 ![Avit Theme][img-theme-avit]
 
+### AvitPython
+
+![Avit Theme][img-theme-avit-python]
+
 ### Honukai
 
 ![Honukai Theme][img-theme-honukai]
@@ -353,6 +357,7 @@ if($env:LC_TERMINAL -eq "iTerm2") {
 [img-theme-sorin]: img/sorin.png
 [img-theme-darkblood]: img/darkblood.png
 [img-theme-avit]: img/avit.png
+[img-theme-avit-python]: img/avitpython.png
 [img-theme-honukai]: img/honukai.png
 [img-theme-fish]: img/fish.png
 [img-theme-robbyrussell]: img/robbyrussel.png
