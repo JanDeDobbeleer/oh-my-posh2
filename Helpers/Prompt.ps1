@@ -230,11 +230,11 @@ function Set-Newline {
 
 function Get-BatteryInfo {
     if ($env:OS -eq 'Windows_NT' -or $IsWindows) {
-
-        $batteryclass = Get-CimInstance win32_battery
+        $cimSession = New-CimSession
+        $batteryclass = Get-CimInstance win32_battery -Property EstimatedChargeRemaining -CimSession $cimSession
         if (!$batteryclass) { return }
         
-        $powerclass = Get-CimInstance -Class batterystatus -Namespace root\wmi
+        $powerclass = Get-CimInstance -Class batterystatus -Namespace root\wmi -Property PowerOnline,Charging -CimSession $cimSession
         $charge = $batteryclass.EstimatedChargeRemaining
         $connected = $powerclass.PowerOnline
         $charging = $powerclass.Charging
