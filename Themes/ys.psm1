@@ -7,6 +7,10 @@ function Write-Theme {
         [string]
         $with
     )
+    If (Test-VirtualEnv) {
+        $prompt += Write-Prompt -Object ("(" + $(Get-VirtualEnvName) + ") ")
+    }
+    $prompt += Set-Newline
     # check the last command state and indicate if failed
     If ($lastCommandFailed) {
         $prompt += Write-Prompt -Object "$($sl.PromptSymbols.FailedCommandSymbol) " -ForegroundColor $sl.Colors.CommandFailedIconForegroundColor
